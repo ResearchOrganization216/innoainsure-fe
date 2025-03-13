@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-const Forbidden: FC = () => {
+const Home: FC = () => {
   return (
     <div className="m-6">
       <div>This is the dashboard section</div>
@@ -8,4 +8,4 @@ const Forbidden: FC = () => {
   );
 };
 
-export default Forbidden;
+export default Home;

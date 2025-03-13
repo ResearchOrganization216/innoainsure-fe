@@ -1,6 +1,6 @@
-import { Home, Unauthorised } from "./pages";
+import { AddEditRecord, Home, RiskManagement, Unauthorised } from "./pages";
 
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdRadio } from "react-icons/md";
 import { Navigate } from "react-router-dom";
 
 const icon = {
@@ -21,6 +21,12 @@ export const routes = [
         path: "/dashboard",
         element: <Home />,
       },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Risk Management",
+        path: "/risk-management",
+        element: <RiskManagement />,
+      },
     ],
   },
   {
@@ -29,6 +35,10 @@ export const routes = [
       {
         path: "/not-authorized/403",
         element: <Unauthorised />,
+      },
+      {
+        path: "/risk-management/add-record",
+        element: <AddEditRecord />,
       },
     ],
   },
