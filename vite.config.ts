@@ -1,11 +1,26 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from "@vitejs/plugin-react-swc";
 
-// https://vite.dev/config/
+import { defineConfig, loadEnv } from "vite";
+
+import svgr from "vite-plugin-svgr";
+
+const env = loadEnv("all", process.cwd());
+
 export default defineConfig({
-  plugins: [react()],
-  preview: {
-    host: true,
-    port: 5757
-  }
-})
+  optimizeDeps: {
+    exclude: ["js-big-decimal"],
+  },
+  plugins: [react(), svgr()],
+  resolve: {
+    alias: [{ find: "@", replacement: "/src" }],
+  },
+  server: {
+    proxy: {
+      "/api/base/": {
+        target: env.VITE_BASE_API_URL,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/base/, ""),
+      },
+    },
+  },
+});
