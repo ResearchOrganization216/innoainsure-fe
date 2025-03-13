@@ -21,8 +21,14 @@ interface FormData {
   insuredPeriod: number | null;
 }
 
+interface ErrorDetail {
+  error: string;
+  status_code: number;
+  step: string;
+}
+
 interface ApiResponse {
-  errors: string[];
+  errors: ErrorDetail[] | string[];
   explanation: string;
   requiredActions: string[];
   riskLevel: string;
@@ -44,6 +50,7 @@ const CustomerRiskManagement: FC = () => {
   const [result, setResult] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isFallbackMode, setIsFallbackMode] = useState(false);
 
   const genderOptions = [
     { label: "Male", value: "Male" },
@@ -92,6 +99,7 @@ const CustomerRiskManagement: FC = () => {
 
     setLoading(true);
     setError(null);
+    setIsFallbackMode(false);
 
     try {
       const response = await axios.post<ApiResponse>(
@@ -108,12 +116,51 @@ const CustomerRiskManagement: FC = () => {
         }
       );
 
-      if (response.data.status === "success") {
-        setResult(response.data);
+      const data = response.data;
+
+      // Debug log to check the response format
+      console.log("API Response:", data);
+
+      // Check if the response contains fallback data
+      // Both conditions should be checked: status="error" AND valid risk data exists
+      if (
+        data.status === "error" &&
+        data.riskLevel &&
+        data.riskPercentage &&
+        data.explanation
+      ) {
+        console.log("Fallback mode activated");
+        setResult(data);
+        setIsFallbackMode(true);
+      } else if (data.status === "success") {
+        console.log("Success mode");
+        setResult(data);
+        setIsFallbackMode(false);
       } else {
         setError("Analysis failed. Please check your inputs.");
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error("API Error:", err);
+
+      // Try to extract fallback data from error response if available
+      if (err.response && err.response.data) {
+        const errorData = err.response.data;
+        console.log("Error response data:", errorData);
+
+        // Check if fallback data exists in the error response
+        if (
+          errorData.status === "error" &&
+          errorData.riskLevel &&
+          errorData.riskPercentage &&
+          errorData.explanation
+        ) {
+          console.log("Fallback data found in error response");
+          setResult(errorData);
+          setIsFallbackMode(true);
+          return;
+        }
+      }
+
       setError("An error occurred while processing your request.");
     } finally {
       setLoading(false);
@@ -339,6 +386,33 @@ const CustomerRiskManagement: FC = () => {
           <>
             <Divider className="my-4" />
             <div className="p-4">
+              {isFallbackMode && (
+                <Message
+                  severity="warn"
+                  className="w-full mb-4"
+                  style={{ borderRadius: "6px" }}
+                  content={
+                    <div className="p-2">
+                      <h5 className="m-0 p-0 font-bold">
+                        Using Fallback Assessment
+                      </h5>
+                      <p className="m-0 mt-1">
+                        The advanced risk assessment service is temporarily
+                        unavailable. Showing alternative assessment based on
+                        available data.
+                      </p>
+                      {result.errors && result.errors.length > 0 && (
+                        <div className="text-xs mt-2 text-yellow-800">
+                          {typeof result.errors[0] === "string"
+                            ? result.errors[0]
+                            : `Service error: ${result.errors[0].error} (${result.errors[0].step})`}
+                        </div>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+
               <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">Risk Assessment Result</h3>
                 <Tag
@@ -381,6 +455,11 @@ const CustomerRiskManagement: FC = () => {
                   <span className={`text-4xl font-bold ${getRiskTextColor()}`}>
                     {result.riskPercentage.toFixed(1)}%
                   </span>
+                  {isFallbackMode && (
+                    <span className="ml-2 text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                      Fallback Estimate
+                    </span>
+                  )}
                 </div>
 
                 {/* Risk scale labels */}
@@ -401,24 +480,41 @@ const CustomerRiskManagement: FC = () => {
                 />
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg mb-6">
+              <div
+                className={`${
+                  isFallbackMode ? "bg-blue-50 border-blue-200" : "bg-blue-50"
+                } p-4 rounded-lg mb-6 border`}>
                 <div className="flex">
                   <i
-                    className="pi pi-info-circle text-blue-500 mr-3 mt-1"
+                    className={`${
+                      isFallbackMode
+                        ? "pi pi-exclamation-triangle text-yellow-500"
+                        : "pi pi-info-circle text-blue-500"
+                    } mr-3 mt-1`}
                     style={{ fontSize: "1.2rem" }}></i>
                   <p className="text-gray-800">{result.explanation}</p>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-semibold mb-4">Recommended Actions</h4>
+                <h4 className="font-semibold mb-4">
+                  {isFallbackMode
+                    ? "Recommended Actions (Based on Limited Data)"
+                    : "Recommended Actions"}
+                </h4>
                 <div className="grid grid-cols-1 gap-3">
                   {result.requiredActions.map((action, index) => (
                     <div
                       key={index}
-                      className="flex items-start bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                      className={`flex items-start ${
+                        isFallbackMode ? "bg-blue-50" : "bg-white"
+                      } p-4 rounded-lg border border-gray-200 shadow-sm`}>
                       <i
-                        className="pi pi-check-circle text-green-500 mr-3 mt-1"
+                        className={`${
+                          isFallbackMode
+                            ? "pi pi-exclamation-circle text-yellow-500"
+                            : "pi pi-check-circle text-green-500"
+                        } mr-3 mt-1`}
                         style={{ fontSize: "1.2rem" }}></i>
                       <span className="text-gray-700">{action}</span>
                     </div>
