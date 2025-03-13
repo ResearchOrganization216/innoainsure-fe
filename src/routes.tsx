@@ -1,4 +1,9 @@
-import { AddEditRecord, Home, RiskManagement, Unauthorised } from "./pages";
+import {
+  AddEditRecord,
+  Home,
+  CustomerRiskManagement,
+  Unauthorised,
+} from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";
 import { Navigate } from "react-router-dom";
@@ -24,8 +29,8 @@ export const routes = [
       {
         icon: <MdRadio {...icon} />,
         name: "Risk Management",
-        path: "/risk-management",
-        element: <RiskManagement />,
+        path: "/customer-risk-management",
+        element: <CustomerRiskManagement />,
       },
     ],
   },
@@ -37,7 +42,7 @@ export const routes = [
         element: <Unauthorised />,
       },
       {
-        path: "/risk-management/add-record",
+        path: "/customer-risk-management/add-record",
         element: <AddEditRecord />,
       },
     ],
