@@ -415,17 +415,16 @@ const CustomerRiskManagement: FC = () => {
 
               <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">Risk Assessment Result</h3>
-                <Tag
-                  value={result.riskLevel.replace("_", " ").toUpperCase()}
-                  severity={
+                <span
+                  className={`text-sm px-3 py-1 mt-2 md:mt-0 font-medium rounded-full ${
                     result.riskLevel.includes("high")
-                      ? "danger"
+                      ? "bg-red-500 text-white"
                       : result.riskLevel.includes("medium")
-                      ? "warning"
-                      : "success"
-                  }
-                  className="text-sm px-3 py-1 mt-2 md:mt-0 font-medium"
-                />
+                      ? "bg-yellow-400 text-black"
+                      : "bg-green-500 text-white"
+                  }`}>
+                  {result.riskLevel.replace("_", " ").toUpperCase()}
+                </span>
               </div>
 
               {/* Risk Meter */}
