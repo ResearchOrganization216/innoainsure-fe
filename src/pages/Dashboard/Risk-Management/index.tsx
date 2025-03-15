@@ -36,6 +36,15 @@ interface ApiResponse {
   status: string;
 }
 
+interface ResultProps {
+  explanation: string;
+}
+
+interface ComponentProps {
+  result: ResultProps;
+  isFallbackMode: boolean;
+}
+
 const CustomerRiskManagement: FC = () => {
   const [formData, setFormData] = useState<FormData>({
     age: null,
@@ -183,6 +192,92 @@ const CustomerRiskManagement: FC = () => {
       </p>
     </div>
   );
+
+  // Helper function to format AI response
+  const formatAIResponse = (responseText: string): JSX.Element => {
+    // Split by sections (based on ### headers)
+    const sections = responseText.split(/(?=###\s+[A-Za-z\s]+:)/);
+
+    return (
+      <div className="text-gray-800">
+        {sections.map((section, index) => {
+          // Extract section title if it exists
+          const titleMatch = section.match(/^###\s+([A-Za-z\s]+):/);
+          const title = titleMatch ? titleMatch[1] : null;
+
+          // Remove title from content if it exists
+          let content = title
+            ? section.replace(/^###\s+[A-Za-z\s]+:/, "").trim()
+            : section.trim();
+
+          // Process content - convert numbered lists, bullet points, etc.
+          const formattedContent = formatContent(content);
+
+          return (
+            <div key={index} className="mb-4">
+              {title && <h3 className="font-medium text-lg mb-2">🚀{title}</h3>}
+              <div className="pl-1">{formattedContent}</div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // Helper function to format content sections
+  const formatContent = (content: string): JSX.Element[] => {
+    // Split content into paragraphs
+    return content.split(/\n\s*\n/).map((paragraph, idx) => {
+      // Check if paragraph contains numbered points (1., 2., etc.)
+      if (/^\s*\d+\.\s/.test(paragraph)) {
+        const points = paragraph.split(/(?=\s*\d+\.\s)/);
+        return (
+          <ol key={idx} className="list-decimal pl-5 space-y-2 my-2">
+            {points.map((point, pointIdx) => {
+              // Remove the number prefix
+              const cleanPoint = point.replace(/^\s*\d+\.\s/, "");
+              return cleanPoint.trim() ? (
+                <li key={pointIdx}>{cleanPoint}</li>
+              ) : null;
+            })}
+          </ol>
+        );
+      }
+
+      // Check if paragraph contains bullet points
+      else if (/^\s*\*\s/.test(paragraph)) {
+        const points = paragraph.split(/(?=\s*\*\s)/);
+        return (
+          <ul key={idx} className="list-disc pl-5 space-y-2 my-2">
+            {points.map((point, pointIdx) => {
+              // Remove the bullet prefix
+              const cleanPoint = point.replace(/^\s*\*\s/, "");
+              return cleanPoint.trim() ? (
+                <li key={pointIdx}>{cleanPoint}</li>
+              ) : null;
+            })}
+          </ul>
+        );
+      }
+
+      // Handle bold text and key terms
+      else {
+        // For TypeScript safety, we'll create a safer version of dangerouslySetInnerHTML
+        const formattedParagraph = paragraph
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          .replace(/([A-Za-z\s]+):/g, "<strong>$1:</strong>");
+
+        // With TypeScript, we need to handle this differently
+        return (
+          <p
+            key={idx}
+            className="my-2"
+            dangerouslySetInnerHTML={{ __html: formattedParagraph }}
+          />
+        );
+      }
+    });
+  };
 
   return (
     <div className="max-w-auto mx-auto p-6">
@@ -482,16 +577,16 @@ const CustomerRiskManagement: FC = () => {
               <div
                 className={`${
                   isFallbackMode ? "bg-blue-50 border-blue-200" : "bg-blue-50"
-                } p-4 rounded-lg mb-6 border`}>
-                <div className="flex">
+                } p-5 rounded-lg mb-6 border shadow-sm`}>
+                <div className="flex items-start">
                   <i
                     className={`${
                       isFallbackMode
                         ? "pi pi-exclamation-triangle text-yellow-500"
                         : "pi pi-info-circle text-blue-500"
-                    } mr-3 mt-1`}
+                    } mr-3 mt-1 flex-shrink-0`}
                     style={{ fontSize: "1.2rem" }}></i>
-                  <p className="text-gray-800">{result.explanation}</p>
+                  {formatAIResponse(result.explanation)}
                 </div>
               </div>
 
