@@ -77,16 +77,18 @@ const CustomerRiskManagement: FC = () => {
   ];
 
   const getRiskColor = () => {
-    if (!result) return "";
-    if (result.riskLevel.includes("high")) return "var(--red-500)";
-    if (result.riskLevel.includes("medium")) return "var(--orange-500)";
+    // Even if status is error, we can still show the risk color if risk level is provided
+    if (result?.riskLevel === "error") return "var(--red-500)";
+    if (result?.riskLevel?.includes("high")) return "var(--red-500)";
+    if (result?.riskLevel?.includes("medium")) return "var(--yellow-500)";
     return "var(--green-500)";
   };
 
   const getRiskTextColor = () => {
-    if (!result) return "text-gray-800";
-    if (result.riskLevel.includes("high")) return "text-red-600";
-    if (result.riskLevel.includes("medium")) return "text-orange-600";
+    // Even if status is error, we can still show the risk color if risk level is provided
+    if (result?.riskLevel === "error") return "text-red-600";
+    if (result?.riskLevel?.includes("high")) return "text-red-600";
+    if (result?.riskLevel?.includes("medium")) return "text-yellow-600";
     return "text-green-600";
   };
 
@@ -109,8 +111,10 @@ const CustomerRiskManagement: FC = () => {
     setLoading(true);
     setError(null);
     setIsFallbackMode(false);
+    setResult(null); // Reset previous results
 
     try {
+      console.log("Sending request to API...");
       const response = await axios.post<ApiResponse>(
         "http://127.0.0.1:5000/api/analyze",
         {
@@ -126,19 +130,11 @@ const CustomerRiskManagement: FC = () => {
       );
 
       const data = response.data;
-
-      // Debug log to check the response format
-      console.log("API Response:", data);
+      console.log("API Response Success:", data);
 
       // Check if the response contains fallback data
-      // Both conditions should be checked: status="error" AND valid risk data exists
-      if (
-        data.status === "error" &&
-        data.riskLevel &&
-        data.riskPercentage &&
-        data.explanation
-      ) {
-        console.log("Fallback mode activated");
+      if (data.status === "error") {
+        console.log("Detected error status in successful response");
         setResult(data);
         setIsFallbackMode(true);
       } else if (data.status === "success") {
@@ -156,14 +152,9 @@ const CustomerRiskManagement: FC = () => {
         const errorData = err.response.data;
         console.log("Error response data:", errorData);
 
-        // Check if fallback data exists in the error response
-        if (
-          errorData.status === "error" &&
-          errorData.riskLevel &&
-          errorData.riskPercentage &&
-          errorData.explanation
-        ) {
-          console.log("Fallback data found in error response");
+        // Check if EITHER type of fallback data exists in the error response
+        if (errorData.status === "error") {
+          console.log("Error data found in response - setting as result");
           setResult(errorData);
           setIsFallbackMode(true);
           return;
@@ -177,10 +168,13 @@ const CustomerRiskManagement: FC = () => {
   };
 
   // Risk meter gauge indicator calculation
-  const calculateGaugeRotation = () => {
-    if (!result) return 0;
-    // Convert percentage to degrees (0-180 range)
-    return (result.riskPercentage / 100) * 180;
+  const calculateGaugeRotation = (riskPercentage: number) => {
+    // If it's a complete error state with zero risk percentage
+    if (riskPercentage === 0 && result?.status === "error") {
+      return 0; // Position at low end for error state
+    }
+    // Normal calculation - maps 0-100% to 0-180 degrees
+    return (riskPercentage / 100) * 180;
   };
 
   // Custom header for the card
@@ -278,6 +272,11 @@ const CustomerRiskManagement: FC = () => {
       }
     });
   };
+
+  const hasAssessmentData =
+    result &&
+    ((result.riskLevel && result.riskLevel !== "error") ||
+      (result.requiredActions && result.requiredActions.length > 0));
 
   return (
     <div className="max-w-auto mx-auto p-6">
@@ -481,7 +480,38 @@ const CustomerRiskManagement: FC = () => {
           <>
             <Divider className="my-4" />
             <div className="p-4">
-              {isFallbackMode && (
+              {/* Error state banner - always show when status is error */}
+              {result.status === "error" && (
+                <Message
+                  severity={hasAssessmentData ? "warn" : "error"}
+                  className="w-full mb-4"
+                  style={{ borderRadius: "6px" }}
+                  content={
+                    <div className="p-2">
+                      <h5 className="m-0 p-0 font-bold">
+                        {hasAssessmentData
+                          ? "Using Fallback Assessment"
+                          : "Risk Assessment Service Error"}
+                      </h5>
+                      <p className="m-0 mt-1">
+                        {hasAssessmentData
+                          ? "The advanced risk assessment service is temporarily unavailable. Showing alternative assessment based on available data."
+                          : "The risk assessment service encountered an error. A list of recommended actions has been provided."}
+                      </p>
+                      {result.errors && result.errors.length > 0 && (
+                        <div className="text-xs mt-2">
+                          {typeof result.errors[0] === "string"
+                            ? result.errors[0]
+                            : `Service error: ${result.errors[0].error} (${result.errors[0].step})`}
+                        </div>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+
+              {/* Fallback mode banner (only shown when in fallback mode but not error status) */}
+              {isFallbackMode && result.status !== "error" && (
                 <Message
                   severity="warn"
                   className="w-full mb-4"
@@ -509,112 +539,152 @@ const CustomerRiskManagement: FC = () => {
               )}
 
               <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                <h3 className="text-xl font-bold">Risk Assessment Result</h3>
-                <span
-                  className={`text-sm px-3 py-1 mt-2 md:mt-0 font-medium rounded-full ${
-                    result.riskLevel.includes("high")
-                      ? "bg-red-500 text-white"
-                      : result.riskLevel.includes("medium")
-                      ? "bg-yellow-400 text-black"
-                      : "bg-green-500 text-white"
-                  }`}>
-                  {result.riskLevel.replace("_", " ").toUpperCase()}
-                </span>
-              </div>
-
-              {/* Risk Meter */}
-              <div className="flex flex-col items-center mb-8">
-                <div className="relative w-48 h-24 mb-4">
-                  {/* Semi-circle background */}
-                  <div className="absolute w-full h-full rounded-t-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 overflow-hidden"></div>
-
-                  {/* White overlay */}
-                  <div className="absolute w-44 h-full rounded-t-full bg-white top-2 left-2"></div>
-
-                  {/* Gauge needle */}
-                  <div
-                    className="absolute w-1 h-20 bg-gray-800 rounded-full bottom-0 left-1/2 transform -translate-x-1/2 origin-bottom"
-                    style={{
-                      transform: `translateX(-50%) rotate(${
-                        calculateGaugeRotation() - 90
-                      }deg)`,
-                    }}></div>
-
-                  {/* Center point of gauge */}
-                  <div className="absolute w-4 h-4 rounded-full bg-gray-800 bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-0"></div>
-                </div>
-
-                {/* Percentage display */}
-                <div className="text-center">
-                  <span className={`text-4xl font-bold ${getRiskTextColor()}`}>
-                    {result.riskPercentage.toFixed(1)}%
+                <h3 className="text-xl font-bold">
+                  {result.status === "error" &&
+                  (!hasAssessmentData || result.riskLevel === "error")
+                    ? "Risk Assessment Error"
+                    : "Risk Assessment Result"}
+                </h3>
+                {result.riskLevel && result.riskLevel !== "error" ? (
+                  <span
+                    className={`text-sm px-3 py-1 mt-2 md:mt-0 font-medium rounded-full ${
+                      result.riskLevel.includes("high")
+                        ? "bg-red-500 text-white"
+                        : result.riskLevel.includes("medium")
+                        ? "bg-yellow-400 text-black"
+                        : "bg-green-500 text-white"
+                    }`}>
+                    {result.riskLevel.replace("_", " ").toUpperCase()}
                   </span>
-                  {isFallbackMode && (
-                    <span className="ml-2 text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                      Fallback Estimate
+                ) : (
+                  result.status === "error" && (
+                    <span className="text-sm px-3 py-1 mt-2 md:mt-0 font-medium rounded-full bg-red-500 text-white">
+                      ERROR
                     </span>
-                  )}
-                </div>
-
-                {/* Risk scale labels */}
-                <div className="flex justify-between w-48 mt-2 text-xs font-medium text-gray-600">
-                  <span>LOW RISK</span>
-                  <span>HIGH RISK</span>
-                </div>
+                  )
+                )}
               </div>
 
-              {/* Standard progress bar (keeping as alternative visualization) */}
-              <div className="mb-8">
-                <ProgressBar
-                  value={result.riskPercentage}
-                  showValue={false}
-                  className="h-2"
-                  style={{ backgroundColor: "var(--surface-200)" }}
-                  color={getRiskColor()}
-                />
-              </div>
+              {/* Only show meter for states with actual risk data */}
+              {hasAssessmentData && (
+                <>
+                  {/* Risk Meter */}
+                  <div className="flex flex-col items-center mb-8">
+                    <div className="relative w-48 h-24 mb-4">
+                      {/* Semi-circle background */}
+                      <div className="absolute w-full h-full rounded-t-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 overflow-hidden"></div>
 
-              <div
-                className={`${
-                  isFallbackMode ? "bg-blue-50 border-blue-200" : "bg-blue-50"
-                } p-5 rounded-lg mb-6 border shadow-sm`}>
-                <div className="flex items-start">
-                  <i
+                      {/* White overlay */}
+                      <div className="absolute w-44 h-full rounded-t-full bg-white top-2 left-2"></div>
+
+                      {/* Gauge needle */}
+                      <div
+                        className="absolute w-1 h-20 bg-gray-800 rounded-full bottom-0 left-1/2 transform -translate-x-1/2 origin-bottom"
+                        style={{
+                          transform: `translateX(-50%) rotate(${
+                            calculateGaugeRotation(result.riskPercentage) - 90
+                          }deg)`,
+                        }}></div>
+
+                      {/* Center point of gauge */}
+                      <div className="absolute w-4 h-4 rounded-full bg-gray-800 bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-0"></div>
+                    </div>
+
+                    {/* Percentage display */}
+                    <div className="text-center">
+                      <span
+                        className={`text-4xl font-bold ${getRiskTextColor()}`}>
+                        {result.riskPercentage.toFixed(1)}%
+                      </span>
+                      {(isFallbackMode || result.status === "error") && (
+                        <span className="ml-2 text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                          Fallback Estimate
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Risk scale labels */}
+                    <div className="flex justify-between w-48 mt-2 text-xs font-medium text-gray-600">
+                      <span>LOW RISK</span>
+                      <span>HIGH RISK</span>
+                    </div>
+                  </div>
+
+                  {/* Standard progress bar (keeping as alternative visualization) */}
+                  <div className="mb-8">
+                    <ProgressBar
+                      value={result.riskPercentage}
+                      showValue={false}
+                      className="h-2"
+                      style={{ backgroundColor: "var(--surface-200)" }}
+                      color={getRiskColor()}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Explanation box - only show if there's meaningful content */}
+              {result.explanation &&
+                result.explanation !== "Assessment unavailable" && (
+                  <div
                     className={`${
-                      isFallbackMode
-                        ? "pi pi-exclamation-triangle text-yellow-500"
-                        : "pi pi-info-circle text-blue-500"
-                    } mr-3 mt-1 flex-shrink-0`}
-                    style={{ fontSize: "1.2rem" }}></i>
-                  {formatAIResponse(result.explanation)}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-4">
-                  {isFallbackMode
-                    ? "Recommended Actions (Based on Limited Data)"
-                    : "Recommended Actions"}
-                </h4>
-                <div className="grid grid-cols-1 gap-3">
-                  {result.requiredActions.map((action, index) => (
-                    <div
-                      key={index}
-                      className={`flex items-start ${
-                        isFallbackMode ? "bg-blue-50" : "bg-white"
-                      } p-4 rounded-lg border border-gray-200 shadow-sm`}>
+                      result.status === "error" || isFallbackMode
+                        ? "bg-blue-50 border-blue-200"
+                        : "bg-blue-50"
+                    } p-5 rounded-lg mb-6 border shadow-sm`}>
+                    <div className="flex items-start">
                       <i
                         className={`${
-                          isFallbackMode
-                            ? "pi pi-exclamation-circle text-yellow-500"
-                            : "pi pi-check-circle text-green-500"
-                        } mr-3 mt-1`}
+                          result.status === "error" || isFallbackMode
+                            ? "pi pi-exclamation-triangle text-yellow-500"
+                            : "pi pi-info-circle text-blue-500"
+                        } mr-3 mt-1 flex-shrink-0`}
                         style={{ fontSize: "1.2rem" }}></i>
-                      <span className="text-gray-700">{action}</span>
+                      {formatAIResponse(result.explanation)}
                     </div>
-                  ))}
+                  </div>
+                )}
+
+              {/* Always show the required actions if present */}
+              {result.requiredActions && result.requiredActions.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-4">
+                    {!hasAssessmentData && result.status === "error"
+                      ? "Error Recovery Actions"
+                      : result.status === "error" || isFallbackMode
+                      ? "Recommended Actions (Based on Limited Data)"
+                      : "Recommended Actions"}
+                  </h4>
+                  <div className="grid grid-cols-1 gap-3">
+                    {result.requiredActions.map((action, index) => (
+                      <div
+                        key={index}
+                        className={`flex items-start ${
+                          !hasAssessmentData && result.status === "error"
+                            ? "bg-red-50"
+                            : result.status === "error" || isFallbackMode
+                            ? "bg-blue-50"
+                            : "bg-white"
+                        } p-4 rounded-lg border ${
+                          !hasAssessmentData && result.status === "error"
+                            ? "border-red-200"
+                            : "border-gray-200"
+                        } shadow-sm`}>
+                        <i
+                          className={`${
+                            !hasAssessmentData && result.status === "error"
+                              ? "pi pi-exclamation-circle text-red-500"
+                              : result.status === "error" || isFallbackMode
+                              ? "pi pi-exclamation-circle text-yellow-500"
+                              : "pi pi-check-circle text-green-500"
+                          } mr-3 mt-1`}
+                          style={{ fontSize: "1.2rem" }}></i>
+                        <span className="text-gray-700">{action}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         )}
