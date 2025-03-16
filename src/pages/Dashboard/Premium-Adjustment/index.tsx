@@ -3,10 +3,13 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import loadingBot from "../../../assets/loading_bot.gif";
 import { Card } from "primereact/card";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
+import { Dropdown } from "primereact/dropdown";
+import PremiumLoad from "@/components/PremiumLoad";
 
 // Define response types
 interface RiskResponse {
@@ -20,6 +23,14 @@ interface RiskResponse {
   previous_premium: number;
   previous_risk: number;
 }
+const vehicleTypeOptions = [
+  { label: "Motorbike", value: "motorbike" },
+  { label: "Car", value: "car" },
+  { label: "Van", value: "van" },
+  { label: "ThreeWheel", value: "threewheel" },
+  { label: "Bus", value: "bus" },
+  { label: "Pickup", value: "pickup" },
+];
 
 const PremiumAdjustment: React.FC = () => {
   // Form input states
@@ -34,11 +45,26 @@ const PremiumAdjustment: React.FC = () => {
   const [riskData, setRiskData] = useState<RiskResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // State to toggle explanation visibility
+  const [isExplanationVisible, setIsExplanationVisible] =
+    useState<boolean>(false);
+
   const header = (
     <div className='bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white'>
       <h2 className='text-2xl font-bold mb-2'>Check Premium Adjustment</h2>
       <p className='text-blue-100 opacity-80'>
         Enter vehicle details to see the premium adjustment
+      </p>
+    </div>
+  );
+
+  const header2 = (
+    <div className='text-center mb-5 mt-2'>
+      <h3 className='text-xl font-bold text-indigo-700'>
+        Risk Assessment Summary
+      </h3>
+      <p className='text-gray-500'>
+        Here's your detailed risk and premium adjustment information:
       </p>
     </div>
   );
@@ -79,6 +105,11 @@ const PremiumAdjustment: React.FC = () => {
     }
   };
 
+  // Toggle explanation visibility
+  const toggleExplanation = () => {
+    setIsExplanationVisible(!isExplanationVisible);
+  };
+
   return (
     <div className='max-w-auto mx-auto p-6'>
       <Card header={header} className='shadow-lg border-0 overflow-hidden'>
@@ -95,6 +126,19 @@ const PremiumAdjustment: React.FC = () => {
           <form onSubmit={handleSubmit} className=''>
             {/* Inputs Grid */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+              {/* Vehicle Type Dropdown */}
+              <div className='field'>
+                <label htmlFor='vehicleType'>Vehicle Type:</label>
+                <Dropdown
+                  id='vehicleType'
+                  value={vehicleType}
+                  onChange={(e) => setVehicleType(e.value)}
+                  options={vehicleTypeOptions}
+                  required
+                  className='p-dropdown-lg w-full'
+                  placeholder='Select Vehicle Type'
+                />
+              </div>
               {/* Make Input */}
               <div className='field'>
                 <label htmlFor='make'>Make:</label>
@@ -114,18 +158,6 @@ const PremiumAdjustment: React.FC = () => {
                   id='model'
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  required
-                  className='p-inputtext-lg'
-                />
-              </div>
-
-              {/* Vehicle Type Input */}
-              <div className='field'>
-                <label htmlFor='vehicleType'>Vehicle Type:</label>
-                <InputText
-                  id='vehicleType'
-                  value={vehicleType}
-                  onChange={(e) => setVehicleType(e.target.value)}
                   required
                   className='p-inputtext-lg'
                 />
@@ -179,25 +211,21 @@ const PremiumAdjustment: React.FC = () => {
 
       {/* Loading Spinner */}
       {loading && (
-        <div className='flex justify-content-center align-items-center mt-4'>
-          <ProgressSpinner />
+        <div className='flex justify-center items-center mt-4'>
+          <div className='flex flex-col items-center'>
+            <PremiumLoad
+              isLoading={loading}
+              message='Communicating with Insurance Agent'
+            />
+          </div>
         </div>
       )}
 
       {/* Display Results */}
       {!loading && riskData && (
         <Card
-          title='Suggested Plan'
-          className='shadow-xl border-0 overflow-hidden mt-4 p-5 bg-gradient-to-r from-green-50 to-blue-50'>
-          <div className='text-center mb-5'>
-            <h3 className='text-xl font-bold text-indigo-700'>
-              Risk Assessment Summary
-            </h3>
-            <p className='text-gray-500'>
-              Here's your detailed risk and premium adjustment information:
-            </p>
-          </div>
-
+          header={header2}
+          className='shadow-xl border-0 overflow-hidden mt-4  bg-gradient-to-r from-green-50 to-blue-50'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             {/* Market Risk */}
             <div className='flex items-center justify-between p-3 bg-green-100 rounded-lg shadow-md'>
@@ -278,11 +306,23 @@ const PremiumAdjustment: React.FC = () => {
             </div>
           </div>
 
-          {/* Explanation */}
-          <div className='mb-4 mt-5'>
-            <p className='text-lg text-gray-700 font-medium'>
-              {riskData.explanation}
-            </p>
+          {/* Explanation Toggle */}
+          <div className='mt-5 '>
+            <Button
+              label={
+                isExplanationVisible ? "Hide Explanation" : "Show Explanation"
+              }
+              icon={
+                isExplanationVisible ? "pi pi-chevron-up" : "pi pi-chevron-down"
+              }
+              onClick={toggleExplanation}
+              className='p-button-text text-indigo-700 bg-white border-0'
+            />
+            {isExplanationVisible && (
+              <div className='mt-4 text-lg text-gray-700 font-medium'>
+                <p>{riskData.explanation}</p>
+              </div>
+            )}
           </div>
 
           <div className='mt-5 text-center'>
