@@ -44,10 +44,10 @@ const PremiumAdjustment: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     setLoading(true);
-    setErrorMessage(null); // Clear any previous errors
-    setRiskData(null); // Clear previous results
+    setErrorMessage(null);
+    setRiskData(null);
 
     try {
       const requestData = {
@@ -70,9 +70,9 @@ const PremiumAdjustment: React.FC = () => {
         throw new Error(data.error || "Failed to fetch data");
       }
 
-      setRiskData(data); // Store the response data
+      setRiskData(data);
     } catch (error: any) {
-      setErrorMessage(error.message); // Store error message
+      setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -82,6 +82,15 @@ const PremiumAdjustment: React.FC = () => {
     <div className='max-w-auto mx-auto p-6'>
       <Card header={header} className='shadow-lg border-0 overflow-hidden'>
         <div className='p-4'>
+          {/* Error Message (Centered at Top) */}
+          {errorMessage && (
+            <div className='w-full flex justify-center text-center mb-4'>
+              <div className='p-3 bg-red-100 text-red-600 font-bold rounded-lg shadow-md'>
+                ❌ {errorMessage}
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className=''>
             {/* Inputs Grid */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
@@ -154,7 +163,7 @@ const PremiumAdjustment: React.FC = () => {
             </div>
 
             {/* Submit Button */}
-            <div className='flex justify-content-center'>
+            <div className='flex justify-center'>
               <Button
                 type='submit'
                 label={loading ? "Submitting..." : "Submit"}
@@ -168,11 +177,6 @@ const PremiumAdjustment: React.FC = () => {
       </Card>
 
       {/* Error Message */}
-      {errorMessage && (
-        <div className='p-mt-3 p-text-center text-red-500 font-bold'>
-          ❌ {errorMessage}
-        </div>
-      )}
 
       {/* Loading Spinner */}
       {loading && (
@@ -186,19 +190,19 @@ const PremiumAdjustment: React.FC = () => {
         <Card title='Risk Analysis' className='mt-4'>
           <p>{riskData.explanation}</p>
           <p>
-            <strong>Predicted Risk Rank: </strong>
-            {riskData.predicted_claim_risk_rank}
+            <strong>Predicted Claim Risk Score: </strong>
+            {riskData.predicted_claim_risk_rank}%
           </p>
           <p>
             <strong>Market Risk Score: </strong>
-            {riskData.predicted_market_risk_score}
+            {riskData.predicted_market_risk_score}%
           </p>
           <p>
             <strong>Predicted Price: </strong>
             {riskData.predicted_price}
           </p>
           <p>
-            <strong>Spare Parts Risk Percentage: </strong>
+            <strong>Spare Parts Risk Score: </strong>
             {riskData.predicted_spare_parts_risk_percentage}%
           </p>
           <p>
