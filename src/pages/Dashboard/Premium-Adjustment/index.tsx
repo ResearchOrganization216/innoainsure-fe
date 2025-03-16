@@ -188,43 +188,110 @@ const PremiumAdjustment: React.FC = () => {
       {!loading && riskData && (
         <Card
           title='Suggested Plan'
-          className='shadow-lg border-0 overflow-hidden mt-4'>
-          <p>{riskData.explanation}</p>
+          className='shadow-xl border-0 overflow-hidden mt-4 p-5 bg-gradient-to-r from-green-50 to-blue-50'>
+          <div className='text-center mb-5'>
+            <h3 className='text-xl font-bold text-indigo-700'>
+              Risk Assessment Summary
+            </h3>
+            <p className='text-gray-500'>
+              Here's your detailed risk and premium adjustment information:
+            </p>
+          </div>
 
-          <p>
-            <strong>Market Risk Score: </strong>
-            {riskData.predicted_market_risk_score}%
-          </p>
-          <p>
-            <strong>Spare Parts Risk Score: </strong>
-            {riskData.predicted_spare_parts_risk_percentage}%
-          </p>
-          <p>
-            <strong>Claim Risk Score: </strong>
-            {riskData.predicted_claim_risk_rank}%
-          </p>
-          <p>
-            <strong>Previous Risk Score: </strong>
-            {riskData.previous_risk}%
-          </p>
-          <p>
-            <strong>New Risk Score: </strong>
-            {riskData.total_risk_score}%
-          </p>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {/* Market Risk */}
+            <div className='flex items-center justify-between p-3 bg-green-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Market Risk Score
+              </div>
+              <div className='text-lg font-bold text-green-700'>
+                {riskData.predicted_market_risk_score.toFixed(2)}%
+              </div>
+            </div>
 
-          <p>
-            <strong>Previous Premium: </strong>
-            Rs {riskData.previous_premium.toFixed(2)}
-          </p>
+            {/* Spare Parts Risk */}
+            <div className='flex items-center justify-between p-3 bg-yellow-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Spare Parts Risk Score
+              </div>
+              <div className='text-lg font-bold text-yellow-700'>
+                {riskData.predicted_spare_parts_risk_percentage.toFixed(2)}%
+              </div>
+            </div>
 
-          <p>
-            <strong>Suggested Premium: </strong>
-            Rs {riskData.premium_adjustment.toFixed(2)}
-          </p>
-          <p>
-            <strong>Adjustment Percentage: </strong>
-            {riskData.premium_adjustment_percentage}
-          </p>
+            {/* Claim Risk */}
+            <div className='flex items-center justify-between p-3 bg-orange-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Claim Risk Score
+              </div>
+              <div className='text-lg font-bold text-orange-700'>
+                {riskData.predicted_claim_risk_rank.toFixed(2)}%
+              </div>
+            </div>
+
+            {/* Previous Risk */}
+            <div className='flex items-center justify-between p-3 bg-blue-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Previous Risk Score
+              </div>
+              <div className='text-lg font-bold text-blue-700'>
+                {riskData.previous_risk.toFixed(2)}%
+              </div>
+            </div>
+            {/* New Risk */}
+            <div className='flex items-center justify-between p-3 bg-indigo-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                New Risk Score
+              </div>
+              <div className='text-lg font-bold text-indigo-700'>
+                {riskData.total_risk_score}%
+              </div>
+            </div>
+            {/* Adjustment Percentage */}
+            <div className='flex items-center justify-between p-3 bg-purple-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Adjustment Percentage
+              </div>
+              <div className='text-lg font-bold text-purple-700'>
+                {riskData.premium_adjustment_percentage}
+              </div>
+            </div>
+
+            {/* Previous Premium */}
+            <div className='flex items-center justify-between p-3 bg-teal-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Previous Premium
+              </div>
+              <div className='text-lg font-bold text-teal-700'>
+                Rs {riskData.previous_premium.toFixed(2)}
+              </div>
+            </div>
+
+            {/* Suggested Premium */}
+            <div className='flex items-center justify-between p-3 bg-pink-100 rounded-lg shadow-md'>
+              <div className='text-sm font-semibold text-gray-700'>
+                Suggested Premium
+              </div>
+              <div className='text-lg font-bold text-pink-700'>
+                Rs {riskData.premium_adjustment.toFixed(2)}
+              </div>
+            </div>
+          </div>
+
+          {/* Explanation */}
+          <div className='mb-4 mt-5'>
+            <p className='text-lg text-gray-700 font-medium'>
+              {riskData.explanation}
+            </p>
+          </div>
+
+          <div className='mt-5 text-center'>
+            <Button
+              label='Accept Plan'
+              icon='pi pi-check'
+              className='p-button-lg p-button-success'
+            />
+          </div>
         </Card>
       )}
     </div>
