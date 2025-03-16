@@ -13,11 +13,12 @@ interface RiskResponse {
   explanation: string;
   predicted_claim_risk_rank: number;
   predicted_market_risk_score: number;
-  predicted_price: number;
   predicted_spare_parts_risk_percentage: number;
   premium_adjustment: number;
   premium_adjustment_percentage: number;
   total_risk_score: number;
+  previous_premium: number;
+  previous_risk: number;
 }
 
 const PremiumAdjustment: React.FC = () => {
@@ -35,7 +36,7 @@ const PremiumAdjustment: React.FC = () => {
 
   const header = (
     <div className='bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white'>
-      <h2 className='text-2xl font-bold mb-2'>Premium Adjustment</h2>
+      <h2 className='text-2xl font-bold mb-2'>Check Premium Adjustment</h2>
       <p className='text-blue-100 opacity-80'>
         Enter vehicle details to see the premium adjustment
       </p>
@@ -176,8 +177,6 @@ const PremiumAdjustment: React.FC = () => {
         </div>
       </Card>
 
-      {/* Error Message */}
-
       {/* Loading Spinner */}
       {loading && (
         <div className='flex justify-content-center align-items-center mt-4'>
@@ -187,35 +186,44 @@ const PremiumAdjustment: React.FC = () => {
 
       {/* Display Results */}
       {!loading && riskData && (
-        <Card title='Risk Analysis' className='mt-4'>
+        <Card
+          title='Suggested Plan'
+          className='shadow-lg border-0 overflow-hidden mt-4'>
           <p>{riskData.explanation}</p>
-          <p>
-            <strong>Predicted Claim Risk Score: </strong>
-            {riskData.predicted_claim_risk_rank}%
-          </p>
+
           <p>
             <strong>Market Risk Score: </strong>
             {riskData.predicted_market_risk_score}%
-          </p>
-          <p>
-            <strong>Predicted Price: </strong>
-            {riskData.predicted_price}
           </p>
           <p>
             <strong>Spare Parts Risk Score: </strong>
             {riskData.predicted_spare_parts_risk_percentage}%
           </p>
           <p>
-            <strong>Premium Adjustment: </strong>
+            <strong>Claim Risk Score: </strong>
+            {riskData.predicted_claim_risk_rank}%
+          </p>
+          <p>
+            <strong>Previous Risk Score: </strong>
+            {riskData.previous_risk}%
+          </p>
+          <p>
+            <strong>New Risk Score: </strong>
+            {riskData.total_risk_score}%
+          </p>
+
+          <p>
+            <strong>Previous Premium: </strong>
+            Rs {riskData.previous_premium.toFixed(2)}
+          </p>
+
+          <p>
+            <strong>Suggested Premium: </strong>
             Rs {riskData.premium_adjustment.toFixed(2)}
           </p>
           <p>
             <strong>Adjustment Percentage: </strong>
             {riskData.premium_adjustment_percentage}
-          </p>
-          <p>
-            <strong>Total Risk Score: </strong>
-            {riskData.total_risk_score}
           </p>
         </Card>
       )}
