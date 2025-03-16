@@ -2,7 +2,6 @@ import { FC, useState } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { ProgressBar } from "primereact/progressbar";
-import { Tag } from "primereact/tag";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Divider } from "primereact/divider";
@@ -36,7 +35,7 @@ interface ApiResponse {
   status: string;
 }
 
-interface ResultProps {
+/* interface ResultProps {
   explanation: string;
 }
 
@@ -44,7 +43,7 @@ interface ComponentProps {
   result: ResultProps;
   isFallbackMode: boolean;
 }
-
+ */
 const CustomerRiskManagement: FC = () => {
   const [formData, setFormData] = useState<FormData>({
     age: null,
