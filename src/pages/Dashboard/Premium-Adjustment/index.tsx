@@ -129,7 +129,7 @@ const PremiumAdjustment: React.FC = () => {
 
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/* Vehicle Details Section */}
-            <div className='bg-indigo-50 p-6 rounded-lg shadow-md'>
+            <div className='bg-white'>
               <h3 className='text-2xl font-semibold text-indigo-800 mb-4'>
                 Vehicle Details
               </h3>
@@ -140,7 +140,7 @@ const PremiumAdjustment: React.FC = () => {
                   <label
                     htmlFor='vehicleType'
                     className='text-lg font-medium text-gray-700'>
-                    Vehicle Type:
+                    Vehicle Type<span className='text-red-500'>* </span>
                   </label>
                   <Dropdown
                     id='vehicleType'
@@ -158,7 +158,7 @@ const PremiumAdjustment: React.FC = () => {
                   <label
                     htmlFor='make'
                     className='text-lg font-medium text-gray-700'>
-                    Make:
+                    Make<span className='text-red-500'>* </span>
                   </label>
                   <InputText
                     id='make'
@@ -174,7 +174,7 @@ const PremiumAdjustment: React.FC = () => {
                   <label
                     htmlFor='model'
                     className='text-lg font-medium text-gray-700'>
-                    Model:
+                    Model<span className='text-red-500'>* </span>
                   </label>
                   <InputText
                     id='model'
@@ -190,7 +190,7 @@ const PremiumAdjustment: React.FC = () => {
                   <label
                     htmlFor='year'
                     className='text-lg font-medium text-gray-700'>
-                    Year:
+                    Year<span className='text-red-500'>* </span>
                   </label>
                   <InputNumber
                     id='year'
@@ -210,7 +210,7 @@ const PremiumAdjustment: React.FC = () => {
                   <label
                     htmlFor='mileage'
                     className='text-lg font-medium text-gray-700'>
-                    Mileage:
+                    Mileage<span className='text-red-500'>* </span>
                   </label>
                   <InputNumber
                     id='mileage'
