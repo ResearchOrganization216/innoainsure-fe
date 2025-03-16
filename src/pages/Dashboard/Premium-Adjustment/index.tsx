@@ -127,86 +127,113 @@ const PremiumAdjustment: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className=''>
-            {/* Inputs Grid */}
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
-              {/* Vehicle Type Dropdown */}
-              <div className='field'>
-                <label htmlFor='vehicleType'>Vehicle Type:</label>
-                <Dropdown
-                  id='vehicleType'
-                  value={vehicleType}
-                  onChange={(e) => setVehicleType(e.value)}
-                  options={vehicleTypeOptions}
-                  required
-                  className='p-dropdown-lg w-full'
-                  placeholder='Select Vehicle Type'
-                />
-              </div>
-              {/* Make Input */}
-              <div className='field'>
-                <label htmlFor='make'>Make:</label>
-                <InputText
-                  id='make'
-                  value={make}
-                  onChange={(e) => setMake(e.target.value)}
-                  required
-                  className='p-inputtext-lg'
-                />
-              </div>
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/* Vehicle Details Section */}
+            <div className='bg-indigo-50 p-6 rounded-lg shadow-md'>
+              <h3 className='text-2xl font-semibold text-indigo-800 mb-4'>
+                Vehicle Details
+              </h3>
 
-              {/* Model Input */}
-              <div className='field'>
-                <label htmlFor='model'>Model:</label>
-                <InputText
-                  id='model'
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                  required
-                  className='p-inputtext-lg'
-                />
-              </div>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                {/* Vehicle Type Dropdown */}
+                <div className='field'>
+                  <label
+                    htmlFor='vehicleType'
+                    className='text-lg font-medium text-gray-700'>
+                    Vehicle Type:
+                  </label>
+                  <Dropdown
+                    id='vehicleType'
+                    value={vehicleType}
+                    onChange={(e) => setVehicleType(e.value)}
+                    options={vehicleTypeOptions}
+                    required
+                    className='p-dropdown-lg w-full mt-2'
+                    placeholder='Select Vehicle Type'
+                  />
+                </div>
 
-              {/* Year Input */}
-              <div className='field'>
-                <label htmlFor='year'>Year:</label>
-                <InputNumber
-                  id='year'
-                  value={year ?? null}
-                  onValueChange={(e) =>
-                    setYear(e.value !== null ? e.value : undefined)
-                  }
-                  min={1990}
-                  max={new Date().getFullYear()}
-                  required
-                  className='p-inputnumber-lg'
-                />
-              </div>
+                {/* Make Input */}
+                <div className='field'>
+                  <label
+                    htmlFor='make'
+                    className='text-lg font-medium text-gray-700'>
+                    Make:
+                  </label>
+                  <InputText
+                    id='make'
+                    value={make}
+                    onChange={(e) => setMake(e.target.value)}
+                    required
+                    className='p-inputtext-lg mt-2'
+                  />
+                </div>
 
-              {/* Mileage Input */}
-              <div className='field'>
-                <label htmlFor='mileage'>Mileage:</label>
-                <InputNumber
-                  id='mileage'
-                  value={mileage ?? null}
-                  onValueChange={(e) =>
-                    setMileage(e.value !== null ? e.value : undefined)
-                  }
-                  min={0}
-                  required
-                  className='p-inputnumber-lg'
-                />
+                {/* Model Input */}
+                <div className='field'>
+                  <label
+                    htmlFor='model'
+                    className='text-lg font-medium text-gray-700'>
+                    Model:
+                  </label>
+                  <InputText
+                    id='model'
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    required
+                    className='p-inputtext-lg mt-2'
+                  />
+                </div>
+
+                {/* Year Input */}
+                <div className='field'>
+                  <label
+                    htmlFor='year'
+                    className='text-lg font-medium text-gray-700'>
+                    Year:
+                  </label>
+                  <InputNumber
+                    id='year'
+                    value={year ?? null}
+                    onValueChange={(e) =>
+                      setYear(e.value !== null ? e.value : undefined)
+                    }
+                    min={1990}
+                    max={new Date().getFullYear()}
+                    required
+                    className='p-inputnumber-lg mt-2'
+                  />
+                </div>
+
+                {/* Mileage Input */}
+                <div className='field'>
+                  <label
+                    htmlFor='mileage'
+                    className='text-lg font-medium text-gray-700'>
+                    Mileage:
+                  </label>
+                  <InputNumber
+                    id='mileage'
+                    value={mileage ?? null}
+                    onValueChange={(e) =>
+                      setMileage(e.value !== null ? e.value : undefined)
+                    }
+                    min={0}
+                    required
+                    className='p-inputnumber-lg mt-2'
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit Button Section */}
             <div className='flex justify-center'>
               <Button
                 type='submit'
                 label={loading ? "Submitting..." : "Check Premium Adjustment"}
                 icon={loading ? null : "pi pi-chart-bar"}
                 disabled={loading}
-                className='p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700'
+                className='p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700 text-white w-full md:w-auto'
               />
             </div>
           </form>
