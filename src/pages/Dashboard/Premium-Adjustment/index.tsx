@@ -8,59 +8,77 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
+// Define response types
+interface RiskResponse {
+  explanation: string;
+  predicted_claim_risk_rank: number;
+  predicted_market_risk_score: number;
+  predicted_price: number;
+  predicted_spare_parts_risk_percentage: number;
+  premium_adjustment: number;
+  premium_adjustment_percentage: number;
+  total_risk_score: number;
+}
+
 const PremiumAdjustment: React.FC = () => {
-  // States with no default values
+  // Form input states
   const [make, setMake] = useState<string>("");
   const [model, setModel] = useState<string>("");
   const [vehicleType, setVehicleType] = useState<string>("");
   const [year, setYear] = useState<number | undefined>(undefined);
   const [mileage, setMileage] = useState<number | undefined>(undefined);
 
+  // State for response and errors
   const [loading, setLoading] = useState<boolean>(false);
-  const [riskData, setRiskData] = useState<any>(null);
+  const [riskData, setRiskData] = useState<RiskResponse | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Function to handle form submission
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission
+    setLoading(true);
+    setErrorMessage(null); // Clear any previous errors
+    setRiskData(null); // Clear previous results
 
-    setLoading(true); // Start loading
     try {
+      const requestData = {
+        make,
+        model,
+        vehicle_type: vehicleType,
+        year: year ?? null,
+        mileage: mileage ?? null,
+      };
+
       const response = await fetch("http://127.0.0.1:5000/api/vehicles/risk", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          make,
-          model,
-          vehicle_type: vehicleType,
-          year,
-          mileage,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error(data.error || "Failed to fetch data");
       }
 
-      const data = await response.json();
       setRiskData(data); // Store the response data
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    } catch (error: any) {
+      setErrorMessage(error.message); // Store error message
     } finally {
-      setLoading(false); // Stop loading when request is done
+      setLoading(false);
     }
   };
 
   return (
     <div className='flex flex-column align-items-center'>
       <h1>Premium Adjustment</h1>
-      <p>Welcome to the Premium Adjustment page.</p>
+      <p>Enter vehicle details to calculate premium adjustments.</p>
 
-      {/* Form for vehicle details */}
+      {/* Vehicle Form */}
       <form
         onSubmit={handleSubmit}
-        className='flex flex-column align-items-center gap-2'>
+        className='flex flex-column align-items-center gap-3'>
+        {/* Make Input */}
         <div className='field'>
           <label htmlFor='make'>Make:</label>
           <InputText
@@ -72,6 +90,7 @@ const PremiumAdjustment: React.FC = () => {
           />
         </div>
 
+        {/* Model Input */}
         <div className='field'>
           <label htmlFor='model'>Model:</label>
           <InputText
@@ -83,6 +102,7 @@ const PremiumAdjustment: React.FC = () => {
           />
         </div>
 
+        {/* Vehicle Type Input */}
         <div className='field'>
           <label htmlFor='vehicleType'>Vehicle Type:</label>
           <InputText
@@ -94,35 +114,34 @@ const PremiumAdjustment: React.FC = () => {
           />
         </div>
 
+        {/* Year Input */}
         <div className='field'>
           <label htmlFor='year'>Year:</label>
           <InputNumber
             id='year'
             value={year}
-            onValueChange={(e) =>
-              setYear(e.value !== null ? e.value : undefined)
-            }
-            min={1900}
+            onValueChange={(e) => setYear(e.value ?? undefined)}
+            min={1990}
             max={new Date().getFullYear()}
             required
             className='p-inputnumber-lg'
           />
         </div>
 
+        {/* Mileage Input */}
         <div className='field'>
           <label htmlFor='mileage'>Mileage:</label>
           <InputNumber
             id='mileage'
             value={mileage}
-            onValueChange={(e) =>
-              setMileage(e.value !== null ? e.value : undefined)
-            }
+            onValueChange={(e) => setMileage(e.value ?? undefined)}
             min={0}
             required
             className='p-inputnumber-lg'
           />
         </div>
 
+        {/* Submit Button */}
         <Button
           type='submit'
           label={loading ? "Submitting..." : "Submit"}
@@ -132,14 +151,21 @@ const PremiumAdjustment: React.FC = () => {
         />
       </form>
 
-      {/* Loading spinner */}
+      {/* Error Message */}
+      {errorMessage && (
+        <div className='p-mt-3 p-text-center text-red-500 font-bold'>
+          ❌ {errorMessage}
+        </div>
+      )}
+
+      {/* Loading Spinner */}
       {loading && (
         <div className='flex justify-content-center align-items-center mt-4'>
           <ProgressSpinner />
         </div>
       )}
 
-      {/* Show results after submission */}
+      {/* Display Results */}
       {!loading && riskData && (
         <Card title='Risk Analysis' className='mt-4'>
           <p>{riskData.explanation}</p>
