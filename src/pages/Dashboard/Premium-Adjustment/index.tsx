@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-import { ProgressSpinner } from "primereact/progressspinner";
-import loadingBot from "../../../assets/loading_bot.gif";
 import { Card } from "primereact/card";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -11,7 +9,6 @@ import "primeicons/primeicons.css";
 import { Dropdown } from "primereact/dropdown";
 import PremiumLoad from "@/components/PremiumLoad";
 
-// Define response types
 interface RiskResponse {
   explanation: string;
   predicted_claim_risk_rank: number;
@@ -23,6 +20,7 @@ interface RiskResponse {
   previous_premium: number;
   previous_risk: number;
 }
+
 const vehicleTypeOptions = [
   { label: "Motorbike", value: "motorbike" },
   { label: "Car", value: "car" },
@@ -33,19 +31,16 @@ const vehicleTypeOptions = [
 ];
 
 const PremiumAdjustment: React.FC = () => {
-  // Form input states
   const [make, setMake] = useState<string>("");
   const [model, setModel] = useState<string>("");
   const [vehicleType, setVehicleType] = useState<string>("");
   const [year, setYear] = useState<number | undefined>(undefined);
   const [mileage, setMileage] = useState<number | undefined>(undefined);
 
-  // State for response and errors
   const [loading, setLoading] = useState<boolean>(false);
   const [riskData, setRiskData] = useState<RiskResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // State to toggle explanation visibility
   const [isExplanationVisible, setIsExplanationVisible] =
     useState<boolean>(false);
 
@@ -69,7 +64,6 @@ const PremiumAdjustment: React.FC = () => {
     </div>
   );
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -105,10 +99,20 @@ const PremiumAdjustment: React.FC = () => {
     }
   };
 
-  // Toggle explanation visibility
   const toggleExplanation = () => {
     setIsExplanationVisible(!isExplanationVisible);
   };
+
+  useEffect(() => {
+    // Smooth scroll to the top or specific element when loading finishes
+    if (!loading && riskData) {
+      // Scroll to the top of the page or to the results section after loading
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [loading, riskData]);
 
   return (
     <div className='max-w-auto mx-auto p-6'>
@@ -199,16 +203,15 @@ const PremiumAdjustment: React.FC = () => {
             <div className='flex justify-center'>
               <Button
                 type='submit'
-                label={loading ? "Submitting..." : "Submit"}
-                icon={loading ? null : "pi pi-check"}
+                label={loading ? "Submitting..." : "Check Premium Adjustment"}
+                icon={loading ? null : "pi pi-chart-bar"}
                 disabled={loading}
-                className='p-button-lg mt-3'
+                className='p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700'
               />
             </div>
           </form>
         </div>
       </Card>
-
       {/* Loading Spinner */}
       {loading && (
         <div className='flex justify-center items-center mt-4'>
@@ -329,7 +332,7 @@ const PremiumAdjustment: React.FC = () => {
             <Button
               label='Accept Plan'
               icon='pi pi-check'
-              className='p-button-lg p-button-success'
+              className='p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700'
             />
           </div>
         </Card>

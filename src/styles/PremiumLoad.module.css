@@ -1,17 +1,19 @@
+/* PremiumLoad.module.css */
+
 /* Flashing dots animation */
-.dot-flashing {
+.dotFlashing {
   animation: dot-blink 1.5s infinite;
 }
 
-.dot-flashing:nth-child(1) {
+.dotFlashing:nth-child(1) {
   animation-delay: 0s;
 }
 
-.dot-flashing:nth-child(2) {
+.dotFlashing:nth-child(2) {
   animation-delay: 0.3s;
 }
 
-.dot-flashing:nth-child(3) {
+.dotFlashing:nth-child(3) {
   animation-delay: 0.6s;
 }
 
