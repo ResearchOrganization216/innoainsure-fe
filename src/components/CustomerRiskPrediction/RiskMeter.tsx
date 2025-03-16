@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { ProgressBar } from "primereact/progressbar";
 
 interface RiskMeterProps {
@@ -28,6 +28,13 @@ export const RiskMeter: FC<RiskMeterProps> = ({
     return "text-green-600";
   };
 
+  const getRiskBgColor = () => {
+    if (riskLevel === "error") return "bg-red-100";
+    if (riskLevel.includes("high")) return "bg-red-100";
+    if (riskLevel.includes("medium")) return "bg-yellow-100";
+    return "bg-green-100";
+  };
+
   // Risk meter gauge indicator calculation
   const calculateGaugeRotation = () => {
     // If it's a complete error state with zero risk percentage
@@ -41,25 +48,48 @@ export const RiskMeter: FC<RiskMeterProps> = ({
   return (
     <>
       {/* Risk Meter */}
-      <div className="flex flex-col items-center mb-8">
-        <div className="relative w-48 h-24 mb-4">
-          {/* Semi-circle background */}
-          <div className="absolute w-full h-full rounded-t-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 overflow-hidden"></div>
+      <div className="flex flex-col items-center mb-6">
+        {/* Modern gauge design */}
+        <div className="relative w-56 h-28 mb-6">
+          {/* Semi-circle background with smooth gradient */}
+          <div className="absolute w-full h-full rounded-t-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 overflow-hidden opacity-80"></div>
 
-          {/* White overlay */}
-          <div className="absolute w-44 h-full rounded-t-full bg-white top-2 left-2"></div>
+          {/* Inner white overlay with shadow for depth */}
+          <div className="absolute w-52 h-full rounded-t-full bg-white top-2 left-2 shadow-inner"></div>
 
-          {/* Gauge needle */}
+          {/* Tick marks for gauge */}
+          <div className="absolute w-full h-full">
+            {[...Array(7)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-3 bg-gray-300 rounded-full bottom-0"
+                style={{
+                  left: `${i * 16.67}%`,
+                  transform: `rotate(${i * 30 - 90}deg)`,
+                  transformOrigin: "bottom",
+                }}></div>
+            ))}
+          </div>
+
+          {/* Gauge needle with black color */}
           <div
-            className="absolute w-1 h-20 bg-gray-800 rounded-full bottom-0 left-1/2 transform -translate-x-1/2 origin-bottom"
+            className="absolute w-1 h-24 bg-black bottom-0 left-1/2 transform -translate-x-1/2 origin-bottom transition-all duration-700 ease-out"
             style={{
               transform: `translateX(-50%) rotate(${
                 calculateGaugeRotation() - 90
               }deg)`,
+              boxShadow: "0 0 8px rgba(0,0,0,0.2)",
+              borderRadius: "4px",
             }}></div>
 
           {/* Center point of gauge */}
-          <div className="absolute w-4 h-4 rounded-full bg-gray-800 bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-0"></div>
+          <div className="absolute w-5 h-5 rounded-full bg-black bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-0 shadow-md"></div>
+        </div>
+
+        {/* Risk level label */}
+        <div
+          className={`text-xs font-semibold mb-2 px-3 py-1 rounded-full ${getRiskBgColor()} ${getRiskTextColor()}`}>
+          {riskLevel.toUpperCase()}
         </div>
 
         {/* Percentage display */}
@@ -68,27 +98,33 @@ export const RiskMeter: FC<RiskMeterProps> = ({
             {riskPercentage.toFixed(1)}%
           </span>
           {(isFallbackMode || isError) && (
-            <span className="ml-2 text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+            <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
               Fallback Estimate
             </span>
           )}
         </div>
 
         {/* Risk scale labels */}
-        <div className="flex justify-between w-48 mt-2 text-xs font-medium text-gray-600">
-          <span>LOW RISK</span>
-          <span>HIGH RISK</span>
+        <div className="flex justify-between w-56 mt-3 text-xs font-medium text-gray-500">
+          <span className="text-green-500 font-semibold">LOW RISK</span>
+          <span className="text-gray-400">|</span>
+          <span className="text-yellow-500 font-semibold">MEDIUM</span>
+          <span className="text-gray-400">|</span>
+          <span className="text-red-500 font-semibold">HIGH RISK</span>
         </div>
       </div>
-      {/* Standard progress bar (keeping as alternative visualization) */}
-      <div className="mb-8">
-        <ProgressBar
-          value={riskPercentage}
-          showValue={false}
-          className="h-2"
-          style={{ backgroundColor: "var(--surface-200)" }}
-          color={getRiskColor()}
-        />
+
+      {/* Modern progress bar */}
+      <div className="mb-4">
+        <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-700 ease-out"
+            style={{
+              width: `${riskPercentage}%`,
+              backgroundColor: getRiskColor(),
+              boxShadow: `0 0 8px ${getRiskColor()}`,
+            }}></div>
+        </div>
       </div>
     </>
   );
