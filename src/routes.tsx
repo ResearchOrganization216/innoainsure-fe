@@ -1,8 +1,10 @@
+import path from "path";
 import {
   AddEditRecord,
   Home,
   CustomerRiskManagement,
   Unauthorised,
+  PremiumAdjustment,
 } from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";
@@ -18,7 +20,7 @@ export const routes = [
     pages: [
       {
         path: "/",
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to='/dashboard' replace />,
       },
       {
         icon: <MdDashboard {...icon} />,
@@ -31,6 +33,12 @@ export const routes = [
         name: "Risk Management",
         path: "/customer-risk-management",
         element: <CustomerRiskManagement />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Premium Adjustment",
+        path: "/premium-adjustment",
+        element: <PremiumAdjustment />,
       },
     ],
   },
