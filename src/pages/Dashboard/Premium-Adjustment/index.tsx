@@ -33,6 +33,15 @@ const PremiumAdjustment: React.FC = () => {
   const [riskData, setRiskData] = useState<RiskResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const header = (
+    <div className='bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white'>
+      <h2 className='text-2xl font-bold mb-2'>Premium Adjustment</h2>
+      <p className='text-blue-100 opacity-80'>
+        Enter vehicle details to see the premium adjustment
+      </p>
+    </div>
+  );
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission
@@ -70,86 +79,93 @@ const PremiumAdjustment: React.FC = () => {
   };
 
   return (
-    <div className='flex flex-column align-items-center'>
-      <h1>Premium Adjustment</h1>
-      <p>Enter vehicle details to calculate premium adjustments.</p>
+    <div className='max-w-auto mx-auto p-6'>
+      <Card header={header} className='shadow-lg border-0 overflow-hidden'>
+        <div className='p-4'>
+          <form onSubmit={handleSubmit} className=''>
+            {/* Inputs Grid */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+              {/* Make Input */}
+              <div className='field'>
+                <label htmlFor='make'>Make:</label>
+                <InputText
+                  id='make'
+                  value={make}
+                  onChange={(e) => setMake(e.target.value)}
+                  required
+                  className='p-inputtext-lg'
+                />
+              </div>
 
-      {/* Vehicle Form */}
-      <form
-        onSubmit={handleSubmit}
-        className='flex flex-column align-items-center gap-3'>
-        {/* Make Input */}
-        <div className='field'>
-          <label htmlFor='make'>Make:</label>
-          <InputText
-            id='make'
-            value={make}
-            onChange={(e) => setMake(e.target.value)}
-            required
-            className='p-inputtext-lg'
-          />
+              {/* Model Input */}
+              <div className='field'>
+                <label htmlFor='model'>Model:</label>
+                <InputText
+                  id='model'
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  required
+                  className='p-inputtext-lg'
+                />
+              </div>
+
+              {/* Vehicle Type Input */}
+              <div className='field'>
+                <label htmlFor='vehicleType'>Vehicle Type:</label>
+                <InputText
+                  id='vehicleType'
+                  value={vehicleType}
+                  onChange={(e) => setVehicleType(e.target.value)}
+                  required
+                  className='p-inputtext-lg'
+                />
+              </div>
+
+              {/* Year Input */}
+              <div className='field'>
+                <label htmlFor='year'>Year:</label>
+                <InputNumber
+                  id='year'
+                  value={year ?? null}
+                  onValueChange={(e) =>
+                    setYear(e.value !== null ? e.value : undefined)
+                  }
+                  min={1990}
+                  max={new Date().getFullYear()}
+                  required
+                  className='p-inputnumber-lg'
+                />
+              </div>
+
+              {/* Mileage Input */}
+              <div className='field'>
+                <label htmlFor='mileage'>Mileage:</label>
+                <InputNumber
+                  id='mileage'
+                  value={mileage ?? null}
+                  onValueChange={(e) =>
+                    setMileage(e.value !== null ? e.value : undefined)
+                  }
+                  min={0}
+                  required
+                  className='p-inputnumber-lg'
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className='flex justify-content-center'>
+              <Button
+                type='submit'
+                label={loading ? "Submitting..." : "Submit"}
+                icon={loading ? null : "pi pi-check"}
+                disabled={loading}
+                className='p-button-lg mt-3'
+              />
+            </div>
+          </form>
         </div>
-
-        {/* Model Input */}
-        <div className='field'>
-          <label htmlFor='model'>Model:</label>
-          <InputText
-            id='model'
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            required
-            className='p-inputtext-lg'
-          />
-        </div>
-
-        {/* Vehicle Type Input */}
-        <div className='field'>
-          <label htmlFor='vehicleType'>Vehicle Type:</label>
-          <InputText
-            id='vehicleType'
-            value={vehicleType}
-            onChange={(e) => setVehicleType(e.target.value)}
-            required
-            className='p-inputtext-lg'
-          />
-        </div>
-
-        {/* Year Input */}
-        <div className='field'>
-          <label htmlFor='year'>Year:</label>
-          <InputNumber
-            id='year'
-            value={year}
-            onValueChange={(e) => setYear(e.value ?? undefined)}
-            min={1990}
-            max={new Date().getFullYear()}
-            required
-            className='p-inputnumber-lg'
-          />
-        </div>
-
-        {/* Mileage Input */}
-        <div className='field'>
-          <label htmlFor='mileage'>Mileage:</label>
-          <InputNumber
-            id='mileage'
-            value={mileage}
-            onValueChange={(e) => setMileage(e.value ?? undefined)}
-            min={0}
-            required
-            className='p-inputnumber-lg'
-          />
-        </div>
-
-        {/* Submit Button */}
-        <Button
-          type='submit'
-          label={loading ? "Submitting..." : "Submit"}
-          icon={loading ? null : "pi pi-check"}
-          disabled={loading}
-          className='p-button-lg mt-3'
-        />
-      </form>
+      </Card>
 
       {/* Error Message */}
       {errorMessage && (
