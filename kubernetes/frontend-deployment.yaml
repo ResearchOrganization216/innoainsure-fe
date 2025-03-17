@@ -17,5 +17,6 @@ spec:
       containers:
         - name: frontend
           image: asia-southeast1-docker.pkg.dev/innoainsure-project/innoainsure-fe/innoainsure-fe:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5757
