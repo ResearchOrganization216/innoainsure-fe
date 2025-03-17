@@ -1,50 +1,105 @@
-# React + TypeScript + Vite
+# InnoAInsure-Web-BE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Project Banner](https://github.com/IT21257568/InnoAInsure-Web-FE/blob/8c881c4ef3a5b90de3166125cd3aeb6561f03434/src/assets/InnoAInsure_Web_Application.png)
 
-Currently, two official plugins are available:
+## Project Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Frontend of the InnoAInsure web application build with React Typescript for motor insurance claim process automation, user support, fraud detection and risk analysis.
 
-## Expanding the ESLint configuration
+## System Overview Diagram
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![System overview diagram](https://github.com/IT21257568/InnoAInsure-Web-FE/blob/8c881c4ef3a5b90de3166125cd3aeb6561f03434/src/assets/system_overview_diagram.png)
 
-- Configure the top-level `parserOptions` property like this:
+### Automated Document Processing and Customer Risk Calculation Agent Overview
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+![diagram 1](https://github.com/IT21257568/InnoAInsure-Web-FE/blob/8c881c4ef3a5b90de3166125cd3aeb6561f03434/src/assets/IT21258626_system_diagram.png)
+
+Sub objectives of the above agent includes :
+
+⭕ Calculate motor insurance customer risk as a percentage.
+
+⭕ Categorizing customers based on the risk level.
+
+⭕ Data extraction and processing.
+
+⭕ Document classification, indexing and search.
+
+⭕ Automation of document generation
+
+### Claim Process Automation and Fraud Detection Agent
+
+![diagram 2](https://github.com/IT21257568/InnoAInsure-Web-FE/blob/8c881c4ef3a5b90de3166125cd3aeb6561f03434/src/assets/IT21227622_system_overview_diagram.png)
+
+⭕ Damage analysis using the media files to assess damage and estimate repair costs.
+
+⭕ Automating the process of claim submission with the chatbot assistance.
+
+⭕ Verify the User and Vehicle Details to predict possible fraud.
+
+⭕ Identify patterns indicative of fraudulent activities.
+
+### Vehicle Risk Level Analysis and Premium Prediction Agent
+
+![diagram 3](https://github.com/IT21257568/InnoAInsure-Web-FE/blob/8c881c4ef3a5b90de3166125cd3aeb6561f03434/src/assets/IT21259302_system_overview_diagram.png)
+
+⭕ Predict risk using spare parts data for different vehicle types.
+
+⭕ Predict risk using market prices for different vehicle types.
+
+⭕ Predict risk using historical claim data of different vehicle types.
+
+⭕ Merge risk factors together and compute the overall risk score.
+
+⭕ Adjust premium based on risk score.
+
+### Customer Estimation Cross-Checking and Post-Repair Inspection Agent
+
+![diagram 4](https://github.com/IT21257568/InnoAInsure-Web-FE/blob/8c881c4ef3a5b90de3166125cd3aeb6561f03434/src/assets/IT21257568_system_overview_diagram.png)
+
+⭕ Maintenance of the up-to-date vehicle spare part and repair costs.
+
+⭕ Validating the integrity of the customer sent estimations.
+
+⭕ Automating the process of post repair inspection.
+
+## Technologies used
+
+![Flask](https://img.shields.io/badge/ReactJS-374151?style=for-the-badge&logo=react&logoColor=white)
+![TailwindCss](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Firebase](https://img.shields.io/badge/TYPESCRIPT-fbbf24?style=for-the-badge&logo=TYPESCRIPT&logoColor=white)
+
+## Setup Instructions
+
+Clone the project and follow the below setup instructions in order to setup the environment which needs to run the project.
+
+### Pre-requisites to setup project
+
+### Installing dependencies
+
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
 ```
+
+### Setting up environment variables file
+
+Create an file with .env extension in the project directory and add the following code segments into the file.
+
+```
+
+```
+
+### Running the project
+
+```
+
+```
+
+## Test Setup
+
+### Running unit tests
+
+```
+
+```
+
+## URL of the web application
