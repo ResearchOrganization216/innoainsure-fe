@@ -8,6 +8,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { Dropdown } from "primereact/dropdown";
 import PremiumLoad from "@/components/PremiumLoad";
+import { toast } from "react-toastify";
 
 interface RiskResponse {
   explanation: string;
@@ -99,14 +100,63 @@ const PremiumAdjustment: React.FC = () => {
     }
   };
 
+  const handleAcceptPlan = async () => {
+    if (!riskData) {
+      setErrorMessage("No risk data available to submit.");
+      return;
+    }
+
+    setLoading(true);
+    setErrorMessage(null);
+
+    const requestData = {
+      make,
+      model,
+      vehicle_type: vehicleType,
+      year,
+      mileage,
+      riskData, // Send the entire riskData or any specific fields you need
+    };
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/vehicles/accept-plan",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to accept plan");
+      }
+
+      // Handle success (you can display a success message or update UI)
+      toast.success("Plan accepted successfully");
+
+      //hide results
+      setRiskData(null);
+      setMake("");
+      setModel("");
+      setVehicleType("");
+      setYear(undefined);
+      setMileage(undefined);
+    } catch (error: any) {
+      setErrorMessage(error.message || "Unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleExplanation = () => {
     setIsExplanationVisible(!isExplanationVisible);
   };
 
   useEffect(() => {
-    // Smooth scroll to the top or specific element when loading finishes
     if (!loading && riskData) {
-      // Scroll to the top of the page or to the results section after loading
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: "smooth",
@@ -339,15 +389,17 @@ const PremiumAdjustment: React.FC = () => {
           {/* Explanation Toggle */}
           <div className='mt-5 '>
             <Button
+              className='p-button-text bg-white border-0'
               label={
-                isExplanationVisible ? "Hide Explanation" : "Show Explanation"
+                isExplanationVisible ? "Hide Explanation" : "Show Explanations"
               }
               icon={
                 isExplanationVisible ? "pi pi-chevron-up" : "pi pi-chevron-down"
               }
               onClick={toggleExplanation}
-              className='p-button-text text-indigo-700 bg-white border-0'
+              style={{ color: "black" }}
             />
+
             {isExplanationVisible && (
               <div className='mt-4 text-lg text-gray-700 font-medium'>
                 <p>{riskData.explanation}</p>
@@ -360,6 +412,7 @@ const PremiumAdjustment: React.FC = () => {
               label='Accept Plan'
               icon='pi pi-check'
               className='p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700'
+              onClick={handleAcceptPlan}
             />
           </div>
         </Card>
