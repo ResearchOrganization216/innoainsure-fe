@@ -9,5 +9,8 @@ export type User = {
   Name?: string;
   Roles?: string[];
   Email?: string;
+  Address?: string;
+  Mobile?: string;
+  image_path?: string;
   exp?: string;
 };

@@ -1,7 +1,8 @@
 import SignoutModal from "@/components/SignoutModal";
-import useAuthStore from "@/stores/authStore";
 import { routes } from "@/routes";
+import useAuthStore from "@/stores/authStore";
 import useSidebarStore from "@/stores/SidebarStore";
+import "primeicons/primeicons.css";
 import { FC } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Footer from "./Footer";
@@ -13,7 +14,7 @@ const Dashboard: FC = () => {
   const location = useLocation();
   const { pathname } = location;
   const setIsSignOutVisible = useAuthStore(
-    (state: any) => state.setIsSignOutVisible,
+    (state: any) => state.setIsSignOutVisible
   );
   const isSignOutVisible = useAuthStore((state: any) => state.isSignOutVisible);
   return (
@@ -22,7 +23,11 @@ const Dashboard: FC = () => {
       <div className="relative flex min-h-[97vh] flex-row pt-[85px]">
         <Sidenav />
         <div
-          className={`flex w-full flex-grow flex-col ${pathname === "/dashboard/summary-dashboard" ? "bg-primary-lightGray" : "bg-white"} ${isExpanded ? "pl-[242px]" : "lg:pl-16"}`}
+          className={`flex w-full flex-grow flex-col ${
+            pathname === "/dashboard/summary-dashboard"
+              ? "bg-primary-lightGray"
+              : "bg-white"
+          } ${isExpanded ? "pl-[242px]" : "lg:pl-16"}`}
         >
           <div className="px-8">
             <Routes>
@@ -55,7 +60,7 @@ const Dashboard: FC = () => {
                         ))}
                       </Route>
                     );
-                  }),
+                  })
               )}
             </Routes>
           </div>
