@@ -23,7 +23,4 @@ export default defineConfig({
       },
     },
   },
-  preview: {
-    allowedHosts: ["test-service-280931643377.asia-southeast1.run.app"],
-  },
 });
