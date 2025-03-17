@@ -7,6 +7,7 @@ import { FileUpload } from "primereact/fileupload";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import LoadingAnimation from "@/components/CustomerRiskPrediction/LoadingAnimation";
+import { classNames } from "primereact/utils";
 
 interface ExtractedData {
   accident_location: string;
@@ -113,27 +114,41 @@ const DataExtraction: FC = () => {
   };
 
   return (
-    <div className="m-6">
+    <div className="m-4 md:m-6">
       <h1 className="text-2xl font-bold mb-6">Data Extraction Page</h1>
 
-      <div className="mb-4">
-        <FileUpload
-          mode="basic"
-          name="image"
-          accept="image/*"
-          maxFileSize={10000000}
-          customUpload
-          uploadHandler={handleImageUpload}
-          auto
-          chooseLabel="Select Image"
-          className="mr-2"
-        />
-        <Button
-          label="Extract Data"
-          onClick={extractData}
-          disabled={!imageFile || loading}
-          className="p-button-success"
-        />
+      <div className="mb-6 rounded-lg bg-blue-50 p-4 shadow-sm">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <FileUpload
+            mode="basic"
+            name="image"
+            accept="image/*"
+            maxFileSize={10000000}
+            customUpload
+            uploadHandler={handleImageUpload}
+            auto
+            chooseLabel="Select Document Image"
+            chooseOptions={{
+              icon: "pi pi-cloud-upload",
+              className: "p-button-outlined p-button-primary",
+            }}
+            className="md:flex-1"
+          />
+          <Button
+            label="Extract Data"
+            onClick={extractData}
+            disabled={!imageFile || loading}
+            className="p-button-success bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-0 text-white font-semibold px-6 py-3 rounded-lg hover:shadow-lg transition-all"
+            icon={loading ? "pi pi-spinner pi-spin" : "pi pi-file-excel"}
+          />
+        </div>
+
+        {imageFile && (
+          <div className="mt-4 text-sm text-blue-500">
+            <i className="pi pi-file-image mr-2"></i>
+            {imageFile.name} ({Math.round(imageFile.size / 1024)} KB)
+          </div>
+        )}
       </div>
 
       {loading && <LoadingAnimation loading={loading} />}
