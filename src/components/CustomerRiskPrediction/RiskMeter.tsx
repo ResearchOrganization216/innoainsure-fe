@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { ProgressBar } from "primereact/progressbar";
 
 interface RiskMeterProps {
   riskPercentage: number;

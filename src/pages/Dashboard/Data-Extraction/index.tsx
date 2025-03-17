@@ -7,7 +7,6 @@ import { FileUpload } from "primereact/fileupload";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import LoadingAnimation from "@/components/CustomerRiskPrediction/LoadingAnimation";
-import { classNames } from "primereact/utils";
 
 interface ExtractedData {
   accident_location: string;
