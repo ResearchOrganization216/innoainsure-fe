@@ -55,6 +55,10 @@ jobs:
           kubectl apply -f kubernetes/frontend-deployment.yaml -n ${{ env.GKE_NAMESPACE }}
           kubectl apply -f kubernetes/frontend-service.yaml -n ${{ env.GKE_NAMESPACE }}
 
+      - name: "Restart Frontend Deployment"
+        run: |
+          kubectl rollout restart deployment frontend -n ${{ env.GKE_NAMESPACE }}
+
       - name: "Show Service Output"
         run: |
           kubectl get svc frontend -n ${{ env.GKE_NAMESPACE }}
