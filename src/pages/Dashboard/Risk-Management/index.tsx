@@ -100,7 +100,7 @@ const CustomerRiskManagement: FC = () => {
     try {
       console.log("Sending request to API...");
       const response = await axios.post<ApiResponse>(
-        "http://127.0.0.1:5000/api/analyze",
+        "http://127.0.0.1:5002/api/analyze",
         {
           age: formData.age!,
           gender: formData.gender,
