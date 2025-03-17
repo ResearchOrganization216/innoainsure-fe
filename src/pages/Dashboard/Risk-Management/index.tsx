@@ -427,20 +427,40 @@ const CustomerRiskManagement: FC = () => {
               {result.explanation &&
                 result.explanation !== "Assessment unavailable" && (
                   <div
-                    className={`${
+                    className={`relative rounded-2xl p-6 mb-6 transition-all duration-200 ${
                       result.status === "error" || isFallbackMode
-                        ? "bg-blue-50 border-blue-200"
-                        : "bg-blue-50"
-                    } p-5 rounded-lg mb-6 border shadow-sm`}>
-                    <div className="flex items-start">
-                      <i
-                        className={`${
+                        ? "bg-amber-50/60 ring-1 ring-amber-100"
+                        : "bg-indigo-50/60 ring-1 ring-indigo-100"
+                    } shadow-sm hover:shadow-md hover:ring-2 ${
+                      result.status === "error" || isFallbackMode
+                        ? "hover:ring-amber-200"
+                        : "hover:ring-indigo-200"
+                    } backdrop-blur-sm`}>
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`flex-shrink-0 p-2.5 rounded-lg ${
                           result.status === "error" || isFallbackMode
-                            ? "pi pi-exclamation-triangle text-yellow-500"
-                            : "pi pi-info-circle text-blue-500"
-                        } mr-3 mt-1 flex-shrink-0`}
-                        style={{ fontSize: "1.2rem" }}></i>
-                      {formatAIResponse(result.explanation)}
+                            ? "bg-amber-100 text-amber-600"
+                            : "bg-indigo-100 text-indigo-600"
+                        }`}>
+                        <i
+                          className={`pi ${
+                            result.status === "error" || isFallbackMode
+                              ? "pi-exclamation-triangle"
+                              : "pi-info-circle"
+                          } text-lg`}
+                        />
+                      </div>
+                      <div className="prose prose-indigo">
+                        <div
+                          className={`text-gray-700 leading-relaxed ${
+                            result.status === "error" || isFallbackMode
+                              ? "text-amber-800"
+                              : "text-indigo-900"
+                          }`}>
+                          {formatAIResponse(result.explanation)}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
