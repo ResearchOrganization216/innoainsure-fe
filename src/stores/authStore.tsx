@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 interface AuthState {
   user: User | null;
-  username: string | null;
+  username: string | null | undefined;
 }
 
 interface AuthStore extends AuthState {
