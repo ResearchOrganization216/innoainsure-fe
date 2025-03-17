@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 const axiosInstance = axios.create({
   //baseURL: `${import.meta.env.VITE_API_URL}/api`,
-  baseURL: `http://estimation-cross-checking-280931643377.asia-southeast1.run.app/api`,
+  baseURL: `http://35.247.173.214/api`,
   headers: {
     "Content-Type": "application/json",
   },
