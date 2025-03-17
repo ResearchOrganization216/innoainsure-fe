@@ -13,7 +13,8 @@ export function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [, setIsLoading] = useState(false);
+
+  const isLoading = false;
 
   // Zustand store action
   const storeUser = useAuthStore((state) => state.storeUser);
