@@ -7,6 +7,7 @@ import {
 
 import { MdDashboard, MdRadio } from "react-icons/md";
 import { Navigate } from "react-router-dom";
+import DataExtraction from "./pages/Dashboard/Data-Extraction";
 
 const icon = {
   className: "w-6 h-6 text-inherit",
@@ -31,6 +32,12 @@ export const routes = [
         name: "Risk Management",
         path: "/customer-risk-management",
         element: <CustomerRiskManagement />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Data Extraction",
+        path: "/document-data-extraction",
+        element: <DataExtraction />,
       },
     ],
   },
