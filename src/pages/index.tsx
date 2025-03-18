@@ -4,4 +4,5 @@ export { default as CustomerRiskManagement } from "@/pages/Dashboard/Risk-Manage
 export { default as DataExtraction } from "@/pages/Dashboard/Data-Extraction-ClaimReport";
 export { default as AddEditRecord } from "@/pages/Dashboard/Risk-Management/AddEditRecord/addRiskRecord";
 export { default as DataExtractionDriveStatement } from "@/pages/Dashboard/Data-Extraction-DriverStatement";
+export { default as DataExtractionInspectionReport } from "@/pages/Dashboard/Data-Extraction-InspectionReport";
 export { default as Login } from "@/pages/Auth/Login";

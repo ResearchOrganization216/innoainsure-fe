@@ -4,6 +4,7 @@ import {
   CustomerRiskManagement,
   Unauthorised,
   Login,
+  DataExtractionInspectionReport,
 } from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";
@@ -46,6 +47,12 @@ export const routes = [
         name: "Data Extraction Driver Statement",
         path: "/document-data-extraction-driver-statement",
         element: <DataExtractionDriveStatement />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Data Extraction Inspection Report",
+        path: "/document-data-extraction-inspection-report",
+        element: <DataExtractionInspectionReport />,
       },
     ],
   },
