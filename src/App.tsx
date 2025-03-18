@@ -1,4 +1,4 @@
-import { Dashboard } from "@/layouts";
+import { Auth, Dashboard } from "@/layouts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -11,7 +11,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ToastContainer />
       <Routes>
-        <Route path="/*" element={<Dashboard />} />
+        <Route path="/" element={<Auth />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/auth/*" element={<Auth />} />
       </Routes>
     </QueryClientProvider>
   );

@@ -1,7 +1,7 @@
 export type User = {
   fullName: string;
   userId: string;
-  username: string;
+  username: any;
   email: string;
   role: string;
   password?: string;
@@ -9,5 +9,8 @@ export type User = {
   Name?: string;
   Roles?: string[];
   Email?: string;
+  Address?: string;
+  Mobile?: string;
+  image_path?: string;
   exp?: string;
 };

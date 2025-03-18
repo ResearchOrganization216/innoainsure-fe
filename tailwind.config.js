@@ -9,7 +9,7 @@ export default {
     extend: {
       colors: {
         primary: {
-          blue: "#240950",
+          blue: "#2D2C7F",
           orange: "#DF8012",
           orangeLight: "#5812CC",
           border: "#D1DEEC",
@@ -29,6 +29,7 @@ export default {
           skyBlue: "#35A6F0",
           blueBorder: "#002941",
           grayBackground: "#F3F8FB",
+          inputBorder: "#2D2C7F"
         },
         secondary: {
           blue: "#002941",

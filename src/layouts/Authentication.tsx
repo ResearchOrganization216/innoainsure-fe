@@ -1,4 +1,5 @@
 import { routes } from "@/routes";
+import "primeicons/primeicons.css";
 import { FC } from "react";
 import { Route, Routes } from "react-router-dom";
 

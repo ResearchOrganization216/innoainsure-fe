@@ -2,6 +2,7 @@ import useAuthStore from "@/stores/authStore";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 interface CommonModalProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -11,13 +12,16 @@ export const SignoutModal: React.FC<CommonModalProps> = ({
   visible,
   setVisible,
 }) => {
-
   const setIsSignOutVisible = useAuthStore(
-    (state: any) => state.setIsSignOutVisible,
+    (state: any) => state.setIsSignOutVisible
   );
 
+  const navigate = useNavigate();
+
   const onLogout = async () => {
+    localStorage.removeItem("token");
     setIsSignOutVisible(false);
+    navigate("/auth/sign-in");
   };
 
   const onClose = () => {
