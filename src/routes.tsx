@@ -1,12 +1,10 @@
 import {
   AddEditRecord,
   CustomerRiskManagement,
-  Unauthorised,
-  PremiumAdjustment,
-  Login,
   DataExtractionInspectionReport,
   Home,
   Login,
+  PremiumAdjustment,
   Unauthorised,
 } from "./pages";
 
@@ -25,7 +23,7 @@ export const routes = [
     pages: [
       {
         path: "/",
-        element: <Navigate to='/dashboard' replace />,
+        element: <Navigate to="/dashboard" replace />,
       },
       {
         icon: <MdDashboard {...icon} />,
@@ -76,11 +74,11 @@ export const routes = [
       },
       {
         path: "/auth",
-        element: <Navigate to='/auth/sign-in' replace />,
+        element: <Navigate to="/auth/sign-in" replace />,
       },
       {
         path: "/",
-        element: <Navigate to='/auth/sign-in' replace />,
+        element: <Navigate to="/auth/sign-in" replace />,
       },
     ],
   },
