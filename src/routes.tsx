@@ -3,12 +3,13 @@ import {
   Home,
   CustomerRiskManagement,
   Unauthorised,
+  PremiumList,
   PremiumAdjustment,
   Login,
   DataExtractionInspectionReport,
 } from "./pages";
 
-import { MdDashboard, MdRadio } from "react-icons/md";
+import { MdDashboard, MdRadio, MdMoney } from "react-icons/md";
 import { Navigate } from "react-router-dom";
 import DataExtraction from "./pages/Dashboard/Data-Extraction-ClaimReport";
 import DataExtractionDriveStatement from "./pages/Dashboard/Data-Extraction-DriverStatement";
@@ -38,10 +39,10 @@ export const routes = [
         element: <CustomerRiskManagement />,
       },
       {
-        icon: <MdRadio {...icon} />,
-        name: "Premium Adjustment",
-        path: "/premium-adjustment",
-        element: <PremiumAdjustment />,
+        icon: <MdMoney {...icon} />,
+        name: "Premium Management",
+        path: "/premium-list",
+        element: <PremiumList />,
       },
       {
         icon: <MdRadio {...icon} />,
@@ -88,6 +89,10 @@ export const routes = [
       {
         path: "/not-authorized/403",
         element: <Unauthorised />,
+      },
+      {
+        path: "/adjustment/:id",
+        element: <PremiumAdjustment />,
       },
     ],
   },
