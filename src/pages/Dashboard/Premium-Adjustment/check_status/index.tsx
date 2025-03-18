@@ -101,6 +101,7 @@ const PremiumAdjustment: React.FC = () => {
         vehicle_type: vehicleType,
         year: year ?? null,
         mileage: mileage ?? null,
+        id,
       };
 
       const response = await fetch("http://127.0.0.1:5005/api/vehicles/risk", {
@@ -139,6 +140,7 @@ const PremiumAdjustment: React.FC = () => {
       year,
       mileage,
       riskData,
+      id,
     };
 
     try {
@@ -162,11 +164,6 @@ const PremiumAdjustment: React.FC = () => {
 
       //hide results
       setRiskData(null);
-      setMake("");
-      setModel("");
-      setVehicleType("");
-      setYear(undefined);
-      setMileage(undefined);
     } catch (error: any) {
       setErrorMessage(error.message || "Unexpected error occurred");
     } finally {
