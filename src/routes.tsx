@@ -3,6 +3,7 @@ import {
   Home,
   CustomerRiskManagement,
   Unauthorised,
+  PremiumAdjustment,
   Login,
   DataExtractionInspectionReport,
 } from "./pages";
@@ -22,7 +23,7 @@ export const routes = [
     pages: [
       {
         path: "/",
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to='/dashboard' replace />,
       },
       {
         icon: <MdDashboard {...icon} />,
@@ -35,6 +36,18 @@ export const routes = [
         name: "Risk Management",
         path: "/customer-risk-management",
         element: <CustomerRiskManagement />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Premium Adjustment",
+        path: "/premium-adjustment",
+        element: <PremiumAdjustment />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Premium Adjustment",
+        path: "/premium-adjustment",
+        element: <PremiumAdjustment />,
       },
       {
         icon: <MdRadio {...icon} />,
@@ -67,11 +80,11 @@ export const routes = [
       },
       {
         path: "/auth",
-        element: <Navigate to="/auth/sign-in" replace />,
+        element: <Navigate to='/auth/sign-in' replace />,
       },
       {
         path: "/",
-        element: <Navigate to="/auth/sign-in" replace />,
+        element: <Navigate to='/auth/sign-in' replace />,
       },
     ],
   },
