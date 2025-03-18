@@ -1,11 +1,13 @@
 import {
   AddEditRecord,
-  Home,
   CustomerRiskManagement,
   Unauthorised,
   PremiumAdjustment,
   Login,
   DataExtractionInspectionReport,
+  Home,
+  Login,
+  Unauthorised,
 } from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";

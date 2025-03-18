@@ -1,5 +1,5 @@
 import useAuthStore from "@/stores/authStore";
-import axiosInstance from "@/utils/apiUtil";
+import { axiosEstimationInstance } from "@/utils/apiUtil";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { clsx } from "clsx";
@@ -29,7 +29,7 @@ export function Login() {
   } = useMutation({
     mutationFn: () => {
       // Must match the BE's expected JSON keys: { email, password }
-      return axiosInstance.post("/auth/login", {
+      return axiosEstimationInstance.post("/auth/login", {
         email,
         password,
       });
