@@ -3,6 +3,7 @@ import {
   Home,
   CustomerRiskManagement,
   Unauthorised,
+  Login,
 } from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";
@@ -42,7 +43,35 @@ export const routes = [
     ],
   },
   {
-    layout: "dashboard",
+    title: "auth",
+    layout: "auth",
+    pages: [
+      {
+        name: "sign-in",
+        path: "/sign-in",
+        element: <Login />,
+      },
+      {
+        path: "/auth",
+        element: <Navigate to="/auth/sign-in" replace />,
+      },
+      {
+        path: "/",
+        element: <Navigate to="/auth/sign-in" replace />,
+      },
+    ],
+  },
+  // {
+  //   layout: "dashboard",
+  //   pages: [
+  //     {
+  //       path: "/not-authorized/403",
+  //       element: <Unauthorised />,
+  //     },
+  //   ],
+  // },
+  {
+    layout: "unauthorised",
     pages: [
       {
         path: "/not-authorized/403",
