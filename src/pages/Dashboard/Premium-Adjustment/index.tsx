@@ -80,7 +80,7 @@ const PremiumAdjustment: React.FC = () => {
         mileage: mileage ?? null,
       };
 
-      const response = await fetch("http://127.0.0.1:5000/api/vehicles/risk", {
+      const response = await fetch("http://127.0.0.1:5005/api/vehicles/risk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
@@ -120,7 +120,7 @@ const PremiumAdjustment: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/api/vehicles/accept-plan",
+        "http://127.0.0.1:5005/api/vehicles/accept-plan",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
