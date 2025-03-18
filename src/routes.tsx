@@ -5,11 +5,13 @@ import {
   Unauthorised,
   PremiumAdjustment,
   Login,
+  DataExtractionInspectionReport,
 } from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";
 import { Navigate } from "react-router-dom";
 import DataExtraction from "./pages/Dashboard/Data-Extraction-ClaimReport";
+import DataExtractionDriveStatement from "./pages/Dashboard/Data-Extraction-DriverStatement";
 
 const icon = {
   className: "w-6 h-6 text-inherit",
@@ -43,9 +45,27 @@ export const routes = [
       },
       {
         icon: <MdRadio {...icon} />,
-        name: "Data Extraction",
+        name: "Premium Adjustment",
+        path: "/premium-adjustment",
+        element: <PremiumAdjustment />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Data Extraction Claim Report",
         path: "/document-data-extraction",
         element: <DataExtraction />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Data Extraction Driver Statement",
+        path: "/document-data-extraction-driver-statement",
+        element: <DataExtractionDriveStatement />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Data Extraction Inspection Report",
+        path: "/document-data-extraction-inspection-report",
+        element: <DataExtractionInspectionReport />,
       },
     ],
   },
@@ -68,15 +88,15 @@ export const routes = [
       },
     ],
   },
-  // {
-  //   layout: "dashboard",
-  //   pages: [
-  //     {
-  //       path: "/not-authorized/403",
-  //       element: <Unauthorised />,
-  //     },
-  //   ],
-  // },
+  {
+    layout: "dashboard",
+    pages: [
+      {
+        path: "/not-authorized/403",
+        element: <Unauthorised />,
+      },
+    ],
+  },
   {
     layout: "unauthorised",
     pages: [
