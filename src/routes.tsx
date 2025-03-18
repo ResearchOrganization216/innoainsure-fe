@@ -45,12 +45,6 @@ export const routes = [
       },
       {
         icon: <MdRadio {...icon} />,
-        name: "Premium Adjustment",
-        path: "/premium-adjustment",
-        element: <PremiumAdjustment />,
-      },
-      {
-        icon: <MdRadio {...icon} />,
         name: "Data Extraction Claim Report",
         path: "/document-data-extraction",
         element: <DataExtraction />,
