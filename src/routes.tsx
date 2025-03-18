@@ -7,7 +7,7 @@ import {
 
 import { MdDashboard, MdRadio } from "react-icons/md";
 import { Navigate } from "react-router-dom";
-import DataExtraction from "./pages/Dashboard/Data-Extraction";
+import DataExtraction from "./pages/Dashboard/Data-Extraction-ClaimReport";
 
 const icon = {
   className: "w-6 h-6 text-inherit",
