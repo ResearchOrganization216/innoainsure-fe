@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 const axiosEstimationInstance = axios.create({
   //baseURL: `${import.meta.env.VITE_API_URL}/api`,
-  baseURL: `http://34.142.153.194:5003/api`,
+  baseURL: `http://35.240.245.104:5003/api`,
   headers: {
     "Content-Type": "application/json",
   },

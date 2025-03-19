@@ -1,11 +1,14 @@
 import {
-  AddEditRecord,
+  ClaimManagement,
   CustomerRiskManagement,
   DataExtractionInspectionReport,
+  EstimationCrossChecking,
   Home,
   Login,
   PremiumAdjustment,
   Unauthorised,
+  ViewClaim,
+  ViewEstimation,
 } from "./pages";
 
 import { MdDashboard, MdRadio } from "react-icons/md";
@@ -61,6 +64,18 @@ export const routes = [
         path: "/document-data-extraction-inspection-report",
         element: <DataExtractionInspectionReport />,
       },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Claim Management",
+        path: "/claim-management",
+        element: <ClaimManagement />,
+      },
+      {
+        icon: <MdRadio {...icon} />,
+        name: "Estimation Cross-Checking",
+        path: "/estimation-crosschecking",
+        element: <EstimationCrossChecking />,
+      },
     ],
   },
   {
@@ -89,6 +104,14 @@ export const routes = [
         path: "/not-authorized/403",
         element: <Unauthorised />,
       },
+      {
+        path: "/claim-management/view-record",
+        element: <ViewClaim />,
+      },
+      {
+        path: "/estimation-crosschecking/view-record",
+        element: <ViewEstimation />,
+      },
     ],
   },
   {
@@ -97,10 +120,6 @@ export const routes = [
       {
         path: "/not-authorized/403",
         element: <Unauthorised />,
-      },
-      {
-        path: "/customer-risk-management/add-record",
-        element: <AddEditRecord />,
       },
     ],
   },
