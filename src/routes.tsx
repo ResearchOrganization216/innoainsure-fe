@@ -1,17 +1,18 @@
 import {
   ClaimManagement,
   CustomerRiskManagement,
+  Unauthorised,
+  PremiumList,
+  PremiumAdjustment,
+  Login,
   DataExtractionInspectionReport,
   EstimationCrossChecking,
   Home,
-  Login,
-  PremiumAdjustment,
-  Unauthorised,
   ViewClaim,
   ViewEstimation,
 } from "./pages";
 
-import { MdDashboard, MdRadio } from "react-icons/md";
+import { MdDashboard, MdRadio, MdMoney } from "react-icons/md";
 import { Navigate } from "react-router-dom";
 import DataExtraction from "./pages/Dashboard/Data-Extraction-ClaimReport";
 import DataExtractionDriveStatement from "./pages/Dashboard/Data-Extraction-DriverStatement";
@@ -26,7 +27,7 @@ export const routes = [
     pages: [
       {
         path: "/",
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to='/dashboard' replace />,
       },
       {
         icon: <MdDashboard {...icon} />,
@@ -41,10 +42,10 @@ export const routes = [
         element: <CustomerRiskManagement />,
       },
       {
-        icon: <MdRadio {...icon} />,
-        name: "Premium Adjustment",
-        path: "/premium-adjustment",
-        element: <PremiumAdjustment />,
+        icon: <MdMoney {...icon} />,
+        name: "Premium Management",
+        path: "/premium-list",
+        element: <PremiumList />,
       },
       {
         icon: <MdRadio {...icon} />,
@@ -89,11 +90,11 @@ export const routes = [
       },
       {
         path: "/auth",
-        element: <Navigate to="/auth/sign-in" replace />,
+        element: <Navigate to='/auth/sign-in' replace />,
       },
       {
         path: "/",
-        element: <Navigate to="/auth/sign-in" replace />,
+        element: <Navigate to='/auth/sign-in' replace />,
       },
     ],
   },
@@ -111,6 +112,10 @@ export const routes = [
       {
         path: "/estimation-crosschecking/view-record",
         element: <ViewEstimation />,
+      },
+      {
+        path: "/premium-list/adjustment/:id",
+        element: <PremiumAdjustment />,
       },
     ],
   },

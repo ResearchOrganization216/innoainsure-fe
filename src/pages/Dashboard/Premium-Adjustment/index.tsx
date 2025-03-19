@@ -1,433 +1,168 @@
-import PremiumLoad from "@/components/PremiumLoad";
-import "primeicons/primeicons.css";
-import { Button } from "primereact/button";
-import { Card } from "primereact/card";
-import { Dropdown } from "primereact/dropdown";
-import { InputNumber } from "primereact/inputnumber";
-import { InputText } from "primereact/inputtext";
-import "primereact/resources/primereact.min.css";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import CustomButton from "@/components/VehicleRiskPrediction/CustomButton";
+import { useNavigate } from "react-router-dom";
+import { Card } from "primereact/card";
 
-interface RiskResponse {
-  explanation: string;
-  predicted_claim_risk_rank: number;
-  predicted_market_risk_score: number;
-  predicted_spare_parts_risk_percentage: number;
-  premium_adjustment: number;
-  premium_adjustment_percentage: number;
-  total_risk_score: number;
-  previous_premium: number;
-  previous_risk: number;
+interface Plan {
+  new_premium: string;
+  new_risk: string;
 }
 
-const vehicleTypeOptions = [
-  { label: "Motorbike", value: "motorbike" },
-  { label: "Car", value: "car" },
-  { label: "Van", value: "van" },
-  { label: "ThreeWheel", value: "threewheel" },
-  { label: "Bus", value: "bus" },
-  { label: "Pickup", value: "pickup" },
-];
+interface PolicyHolder {
+  name: string;
+  nic: string;
+  contact_number: string;
+  policy_renewal_date: string;
+}
 
-const PremiumAdjustment: React.FC = () => {
-  const [make, setMake] = useState<string>("");
-  const [model, setModel] = useState<string>("");
-  const [vehicleType, setVehicleType] = useState<string>("");
-  const [year, setYear] = useState<number | undefined>(undefined);
-  const [mileage, setMileage] = useState<number | undefined>(undefined);
+interface Vehicle {
+  created_by: string;
+  created_date: string;
+  id: number;
+  make: string;
+  mileage: string;
+  model: string;
+  plan: {
+    plan: Plan;
+  };
+  policy_holder: {
+    policy_holder: PolicyHolder;
+  };
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [riskData, setRiskData] = useState<RiskResponse | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  user_id: number;
+  vehicle_type: string;
+  year: number;
+}
 
-  const [isExplanationVisible, setIsExplanationVisible] =
-    useState<boolean>(false);
+const VehicleList: React.FC = () => {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const navigate = useNavigate();
 
   const header = (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
-      <h2 className="text-2xl font-bold mb-2">Check Premium Adjustment</h2>
-      <p className="text-blue-100 opacity-80">
-        Enter vehicle details to see the premium adjustment
+    <div className='bg-gradient-to-r to-indigo-900 from-indigo-700 p-6 text-white'>
+      <h2 className='text-2xl font-bold mb-2'>Current Premiums</h2>
+      <p className='text-blue-100 opacity-80'>
+        Check and adjust premiums for each vehicle
       </p>
     </div>
   );
-
-  const header2 = (
-    <div className="text-center mb-5 mt-2">
-      <h3 className="text-xl font-bold text-indigo-700">
-        Risk Assessment Summary
-      </h3>
-      <p className="text-gray-500">
-        Here's your detailed risk and premium adjustment information:
-      </p>
-    </div>
-  );
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMessage(null);
-    setRiskData(null);
-
-    try {
-      const requestData = {
-        make,
-        model,
-        vehicle_type: vehicleType,
-        year: year ?? null,
-        mileage: mileage ?? null,
-      };
-
-      const response = await fetch(
-        "http://35.247.173.214:5005/api/vehicles/risk",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch data");
-      }
-
-      setRiskData(data);
-    } catch (error: any) {
-      setErrorMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAcceptPlan = async () => {
-    if (!riskData) {
-      setErrorMessage("No risk data available to submit.");
-      return;
-    }
-
-    setLoading(true);
-    setErrorMessage(null);
-
-    const requestData = {
-      make,
-      model,
-      vehicle_type: vehicleType,
-      year,
-      mileage,
-      riskData, // Send the entire riskData or any specific fields you need
-    };
-
-    try {
-      const response = await fetch(
-        "http://35.247.173.214:5005/api/vehicles/accept-plan",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to accept plan");
-      }
-
-      // Handle success (you can display a success message or update UI)
-      toast.success("Plan accepted successfully");
-
-      //hide results
-      setRiskData(null);
-      setMake("");
-      setModel("");
-      setVehicleType("");
-      setYear(undefined);
-      setMileage(undefined);
-    } catch (error: any) {
-      setErrorMessage(error.message || "Unexpected error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const toggleExplanation = () => {
-    setIsExplanationVisible(!isExplanationVisible);
-  };
 
   useEffect(() => {
-    if (!loading && riskData) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [loading, riskData]);
+    fetch("http://localhost:5005/api/vehicles/all")
+      .then((response) => response.json())
+      .then((data) => setVehicles(data.vehicles))
+      .catch((error) => console.error("Error fetching vehicles:", error));
+  }, []);
+
+  const viewPremium = (id: number) => {
+    navigate(`/dashboard/premium-list/adjustment/${id}`);
+  };
+
+  const renderActions = (rowData: Vehicle) => {
+    return (
+      <CustomButton
+        label='Check Premium'
+        icon='pi pi-money-bill'
+        onClick={() => viewPremium(rowData.user_id)}
+        className='w-full md:w-auto p-2'
+      />
+    );
+  };
 
   return (
-    <div className="max-w-auto mx-auto p-6">
-      <Card header={header} className="shadow-lg border-0 overflow-hidden">
-        <div className="p-4">
-          {/* Error Message (Centered at Top) */}
-          {errorMessage && (
-            <div className="w-full flex justify-center text-center mb-4">
-              <div className="p-3 bg-red-100 text-red-600 font-bold rounded-lg shadow-md">
-                ❌ {errorMessage}
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Vehicle Details Section */}
-            <div className="bg-white">
-              <h3 className="text-2xl font-semibold text-indigo-800 mb-4">
-                Vehicle Details
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Vehicle Type Dropdown */}
-                <div className="field">
-                  <label
-                    htmlFor="vehicleType"
-                    className="text-lg font-medium text-gray-700"
-                  >
-                    Vehicle Type<span className="text-red-500">* </span>
-                  </label>
-                  <Dropdown
-                    id="vehicleType"
-                    value={vehicleType}
-                    onChange={(e) => setVehicleType(e.value)}
-                    options={vehicleTypeOptions}
-                    required
-                    className="p-dropdown-lg w-full mt-2"
-                    placeholder="Select Vehicle Type"
-                  />
+    <div className='max-w-auto mx-auto p-6'>
+      <Card header={header} className='shadow-lg border-0 overflow-hidden'>
+        <div className=''>
+          <DataTable
+            value={vehicles}
+            paginator
+            rows={5}
+            responsiveLayout='scroll'
+            className='rounded-lg overflow-hidden '>
+            <Column
+              header='Customer Info'
+              body={(rowData) => (
+                <div className='space-y-4'>
+                  <div className='font-semibold text-lg text-gray-800'>
+                    <strong>Name:</strong>{" "}
+                    {rowData.policy_holder[0].policy_holder.name}
+                  </div>
+                  <div className='text-sm text-gray-600'>
+                    <strong>NIC:</strong>{" "}
+                    {rowData.policy_holder[0].policy_holder.nic}
+                  </div>
+                  <div className='text-sm text-gray-600'>
+                    <strong>Contact:</strong>{" "}
+                    {rowData.policy_holder[0].policy_holder.contact_number}
+                  </div>
+                  <div className='text-sm text-gray-600'>
+                    <strong>Renewal Date:</strong>{" "}
+                    {rowData.policy_holder[0].policy_holder.policy_renewal_date}
+                  </div>
                 </div>
+              )}
+              sortable
+              className='bg-gray-50 border-b border-t border-gray-300'
+            />
 
-                {/* Make Input */}
-                <div className="field">
-                  <label
-                    htmlFor="make"
-                    className="text-lg font-medium text-gray-700"
-                  >
-                    Make<span className="text-red-500">* </span>
-                  </label>
-                  <InputText
-                    id="make"
-                    value={make}
-                    onChange={(e) => setMake(e.target.value)}
-                    required
-                    className="p-inputtext-lg mt-2"
-                  />
+            <Column
+              header='Vehicle Info'
+              body={(rowData) => (
+                <div className='space-y-4'>
+                  <div className='font-semibold text-lg text-gray-800'>
+                    <strong>Make:</strong> {rowData.make}
+                  </div>
+                  <div className='text-sm text-gray-600'>
+                    <strong>Model:</strong> {rowData.model}
+                  </div>
+                  <div className='text-sm text-gray-600'>
+                    <strong>Year:</strong> {rowData.year}
+                  </div>
+                  <div className='text-sm text-gray-600'>
+                    <strong>Plate:</strong> XXX - XXXX
+                  </div>
                 </div>
+              )}
+              sortable
+              className='bg-gray-50 border-b border-t border-gray-300'
+            />
 
-                {/* Model Input */}
-                <div className="field">
-                  <label
-                    htmlFor="model"
-                    className="text-lg font-medium text-gray-700"
-                  >
-                    Model<span className="text-red-500">* </span>
-                  </label>
-                  <InputText
-                    id="model"
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    required
-                    className="p-inputtext-lg mt-2"
-                  />
+            <Column
+              field='plan.plan.new_premium'
+              header='Current Premium'
+              sortable
+              body={(rowData) => (
+                <div className='font-medium text-lg text-green-600'>
+                  {rowData.plan.plan.new_premium} LKR
                 </div>
+              )}
+              className='bg-gray-50 border-b border-t border-gray-300'
+            />
 
-                {/* Year Input */}
-                <div className="field">
-                  <label
-                    htmlFor="year"
-                    className="text-lg font-medium text-gray-700"
-                  >
-                    Year<span className="text-red-500">* </span>
-                  </label>
-                  <InputNumber
-                    id="year"
-                    value={year ?? null}
-                    onValueChange={(e) =>
-                      setYear(e.value !== null ? e.value : undefined)
-                    }
-                    min={1990}
-                    max={new Date().getFullYear()}
-                    required
-                    className="p-inputnumber-lg mt-2"
-                  />
+            <Column
+              field='plan.plan.new_risk'
+              header='Current Risk'
+              sortable
+              body={(rowData) => (
+                <div className='font-medium text-lg text-red-600'>
+                  {rowData.plan.plan.new_risk} %
                 </div>
+              )}
+              className='bg-gray-50 border-b border-t border-gray-300'
+            />
 
-                {/* Mileage Input */}
-                <div className="field">
-                  <label
-                    htmlFor="mileage"
-                    className="text-lg font-medium text-gray-700"
-                  >
-                    Mileage<span className="text-red-500">* </span>
-                  </label>
-                  <InputNumber
-                    id="mileage"
-                    value={mileage ?? null}
-                    onValueChange={(e) =>
-                      setMileage(e.value !== null ? e.value : undefined)
-                    }
-                    min={0}
-                    required
-                    className="p-inputnumber-lg mt-2"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Submit Button Section */}
-            <div className="flex justify-center">
-              <Button
-                type="submit"
-                label={loading ? "Submitting..." : "Check Premium Adjustment"}
-                icon={loading ? null : "pi pi-chart-bar"}
-                disabled={loading}
-                className="p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700 text-white w-full md:w-auto"
-              />
-            </div>
-          </form>
+            <Column
+              header='Actions'
+              body={renderActions}
+              className='bg-gray-50 border-b border-t border-gray-300'
+            />
+          </DataTable>
         </div>
       </Card>
-      {/* Loading Spinner */}
-      {loading && (
-        <div className="flex justify-center items-center mt-4">
-          <div className="flex flex-col items-center">
-            <PremiumLoad
-              isLoading={loading}
-              message="Communicating with Insurance Agent"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Display Results */}
-      {!loading && riskData && (
-        <Card
-          header={header2}
-          className="shadow-xl border-0 overflow-hidden mt-4  bg-gradient-to-r from-green-50 to-blue-50"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Market Risk */}
-            <div className="flex items-center justify-between p-3 bg-green-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Market Risk Score
-              </div>
-              <div className="text-lg font-bold text-green-700">
-                {riskData.predicted_market_risk_score.toFixed(2)}%
-              </div>
-            </div>
-
-            {/* Spare Parts Risk */}
-            <div className="flex items-center justify-between p-3 bg-yellow-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Spare Parts Risk Score
-              </div>
-              <div className="text-lg font-bold text-yellow-700">
-                {riskData.predicted_spare_parts_risk_percentage.toFixed(2)}%
-              </div>
-            </div>
-
-            {/* Claim Risk */}
-            <div className="flex items-center justify-between p-3 bg-orange-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Claim Risk Score
-              </div>
-              <div className="text-lg font-bold text-orange-700">
-                {riskData.predicted_claim_risk_rank.toFixed(2)}%
-              </div>
-            </div>
-
-            {/* Previous Risk */}
-            <div className="flex items-center justify-between p-3 bg-blue-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Previous Risk Score
-              </div>
-              <div className="text-lg font-bold text-blue-700">
-                {riskData.previous_risk.toFixed(2)}%
-              </div>
-            </div>
-            {/* New Risk */}
-            <div className="flex items-center justify-between p-3 bg-indigo-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                New Risk Score
-              </div>
-              <div className="text-lg font-bold text-indigo-700">
-                {riskData.total_risk_score}%
-              </div>
-            </div>
-            {/* Adjustment Percentage */}
-            <div className="flex items-center justify-between p-3 bg-purple-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Adjustment Percentage
-              </div>
-              <div className="text-lg font-bold text-purple-700">
-                {riskData.premium_adjustment_percentage}
-              </div>
-            </div>
-
-            {/* Previous Premium */}
-            <div className="flex items-center justify-between p-3 bg-teal-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Previous Premium
-              </div>
-              <div className="text-lg font-bold text-teal-700">
-                Rs {riskData.previous_premium.toFixed(2)}
-              </div>
-            </div>
-
-            {/* Suggested Premium */}
-            <div className="flex items-center justify-between p-3 bg-pink-100 rounded-lg shadow-md">
-              <div className="text-sm font-semibold text-gray-700">
-                Suggested Premium
-              </div>
-              <div className="text-lg font-bold text-pink-700">
-                Rs {riskData.premium_adjustment.toFixed(2)}
-              </div>
-            </div>
-          </div>
-
-          {/* Explanation Toggle */}
-          <div className="mt-5 ">
-            <Button
-              className="p-button-text bg-white border-0"
-              label={
-                isExplanationVisible ? "Hide Explanation" : "Show Explanations"
-              }
-              icon={
-                isExplanationVisible ? "pi pi-chevron-up" : "pi pi-chevron-down"
-              }
-              onClick={toggleExplanation}
-              style={{ color: "black" }}
-            />
-
-            {isExplanationVisible && (
-              <div className="mt-4 text-lg text-gray-700 font-medium">
-                <p>{riskData.explanation}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-5 text-center">
-            <Button
-              label="Accept Plan"
-              icon="pi pi-check"
-              className="p-button-lg bg-gradient-to-r from-blue-700 to-indigo-700 border-none hover:from-indigo-800 hover:to-blue-700"
-              onClick={handleAcceptPlan}
-            />
-          </div>
-        </Card>
-      )}
     </div>
   );
 };
 
-export default PremiumAdjustment;
+export default VehicleList;
