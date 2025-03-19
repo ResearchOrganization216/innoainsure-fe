@@ -57,7 +57,7 @@ const VehicleList: React.FC = () => {
   }, []);
 
   const viewPremium = (id: number) => {
-    navigate(`/adjustment/${id}`);
+    navigate(`/dashboard/premium-list/adjustment/${id}`);
   };
 
   const renderActions = (rowData: Vehicle) => {

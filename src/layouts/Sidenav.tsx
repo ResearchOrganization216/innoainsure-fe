@@ -64,7 +64,7 @@ const Sidenav: FC = () => {
           isExpanded ? "w-3/4 md:w-[30%] lg:w-[250px]" : "md:w-[64px]"
         }  bg-primary-blue py-9 duration-100 `}
       >
-        {filteredRoutes.map(({ pages }, key) => (
+        {filteredRoutes.map(({ layout, pages }, key) => (
           <ul
             key={key}
             className="flex max-h-[calc(100%-85px)] min-h-screen flex-col  gap-1 overflow-y-auto "
@@ -72,7 +72,9 @@ const Sidenav: FC = () => {
             {(pages as any).map(({ icon, name, path, children }, key) => (
               <React.Fragment key={key}>
                 <li onClick={() => children && toggleSubMenu(name)}>
-                  <NavLink to={`${path}`}>
+                  <NavLink
+                    to={layout === "dashboard" ? `/dashboard${path}` : path}
+                  >
                     {({ isActive }) => (
                       <div
                         className={`flex items-center ${
@@ -96,7 +98,13 @@ const Sidenav: FC = () => {
                     <ul className=" relative ml-6 border-l border-secondary-gray  py-2 ">
                       {children.map((child) => (
                         <li key={child.name}>
-                          <NavLink to={`${child.path}`}>
+                          <NavLink
+                            to={
+                              layout === "dashboard"
+                                ? `/dashboard${child.path}`
+                                : child.path
+                            }
+                          >
                             {({ isActive }) => (
                               <div
                                 className={`flex items-center rounded-sm ${

@@ -25,7 +25,7 @@ const Topbar: FC = () => {
       <div className="flex items-center space-x-5 lg:w-fit">
         <Logo className="h-[70px] w-[76px]" />
         <i
-          className="pi pi-bars cursor-pointer hover:text-primary-darkBlue"
+          className="pi pi-arrow-circle-left cursor-pointer hover:text-primary-darkBlue"
           onClick={toggleSidebar}
         />
         <span className="text-nowrap text-[22px] text-[#1F2A37] lg:pl-6">
