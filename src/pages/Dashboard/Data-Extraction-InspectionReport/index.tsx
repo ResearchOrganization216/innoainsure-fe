@@ -142,7 +142,7 @@ const DataExtractionInspectionReport: FC = () => {
   );
 
   return (
-    <div className="m-4 md:m-6">
+    <div className="max-w-auto mx-auto p-6">
       <Card header={header} className="shadow-lg border-0 overflow-hidden">
         <div className="mb-6 rounded-lg bg-blue-50 p-4 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center">
