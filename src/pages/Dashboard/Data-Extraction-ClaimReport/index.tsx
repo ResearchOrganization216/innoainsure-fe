@@ -70,7 +70,7 @@ const DataExtraction: FC = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/api/extract-claim-report",
+        "http://127.0.0.1:5009/api/extract-claim-report",
         formData,
         {
           headers: {
@@ -114,7 +114,9 @@ const DataExtraction: FC = () => {
 
   return (
     <div className="m-4 md:m-6">
-      <h1 className="text-2xl font-bold mb-6">Data Extraction Page</h1>
+      <h1 className="text-2xl font-bold mb-6">
+        Data Extraction for Claim Report
+      </h1>
 
       <div className="mb-6 rounded-lg bg-blue-50 p-4 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
