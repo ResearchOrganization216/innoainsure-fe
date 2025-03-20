@@ -73,7 +73,7 @@ const Home: FC = () => {
   }, []);
 
   return (
-    <div className="m-6 max-w-7xl mx-auto px-4 space-y-8">
+    <div className="m-6 max-w-7xl mx-auto p-1 space-y-4">
       {/* Header */}
       <div className="flex justify-between items-end mb-8">
         <div>
@@ -119,8 +119,8 @@ const Home: FC = () => {
           <Card
             key={index}
             className="shadow-md border-2 rounded-2xl border-blue-300 shadow-sm hover:shadow-md transition-all">
-            <div className="flex items-center justify-between p-4">
-              <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="">
                 <span className="block text-sm font-medium text-gray-500">
                   {card.title}
                 </span>
@@ -138,7 +138,7 @@ const Home: FC = () => {
         ))}
       </div>
 
-      {/* Action Panels Grid */}
+      {/*Chart UI */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Quick Actions Panel */}
         <Chart type="bar" data={chartData} options={chartOptions} />
