@@ -153,7 +153,7 @@ const CustomerRiskManagement: FC = () => {
 
   // Custom header for the card
   const header = (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
+    <div className="bg-gradient-to-r to-indigo-900 from-indigo-700 p-6 text-white">
       <h2 className="text-2xl font-bold mb-2">Customer Risk Assessment</h2>
       <p className="text-blue-100 opacity-80">
         Enter customer details to analyze insurance risk profile
