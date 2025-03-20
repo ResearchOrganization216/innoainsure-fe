@@ -62,25 +62,21 @@ const Sidenav: FC = () => {
           isExpanded ? "translate-x-0 " : "-translate-x-full lg:translate-x-0"
         } lg:transition-width  ${
           isExpanded ? "w-3/4 md:w-[30%] lg:w-[250px]" : "md:w-[64px]"
-        }  bg-primary-blue py-9 duration-100 `}
-      >
+        }  bg-primary-blue py-9 duration-100 `}>
         {filteredRoutes.map(({ layout, pages }, key) => (
           <ul
             key={key}
-            className="flex max-h-[calc(100%-85px)] min-h-screen flex-col  gap-1 overflow-y-auto "
-          >
+            className="flex max-h-[calc(100%-85px)] min-h-screen flex-col  gap-1 overflow-y-auto ">
             {(pages as any).map(({ icon, name, path, children }, key) => (
               <React.Fragment key={key}>
                 <li onClick={() => children && toggleSubMenu(name)}>
                   <NavLink
-                    to={layout === "dashboard" ? `/dashboard${path}` : path}
-                  >
+                    to={layout === "dashboard" ? `/dashboard${path}` : path}>
                     {({ isActive }) => (
                       <div
                         className={`flex items-center ${
                           isActive && "bg-primary-orangeLight"
-                        } px-4 py-5 text-sm text-white hover:bg-primary-orangeLight`}
-                      >
+                        } px-4 py-5 text-sm text-white hover:bg-primary-orangeLight`}>
                         <div className="mr-4">{icon}</div>
                         {isExpanded && name}
                         {children &&
@@ -103,16 +99,14 @@ const Sidenav: FC = () => {
                               layout === "dashboard"
                                 ? `/dashboard${child.path}`
                                 : child.path
-                            }
-                          >
+                            }>
                             {({ isActive }) => (
                               <div
                                 className={`flex items-center rounded-sm ${
                                   isActive
                                     ? "text-white"
                                     : "text-secondary-gray"
-                                }  py-3 text-sm  hover:text-white`}
-                              >
+                                }  py-3 text-sm  hover:text-white`}>
                                 <div className="mr-3">{child.icon}</div>
                                 {child.name}
                               </div>

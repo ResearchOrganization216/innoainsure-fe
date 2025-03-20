@@ -2,6 +2,7 @@
 import CommonTable from "@/components/CommonTable"; // adjust path as needed
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Card } from "primereact/card";
 
 const headers = [
   { key: "CLAIM_CODE", label: "Claim Code" },
@@ -76,17 +77,27 @@ const onDelete = () => {};
 const ClaimManagement: React.FC = () => {
   const navigate = useNavigate();
 
+  const header = (
+    <div className="bg-gradient-to-r to-indigo-900 from-indigo-700 p-6 text-white">
+      <h2 className="text-2xl font-bold mb-2">Claim Management</h2>
+      <p className="text-blue-100 opacity-80">
+        Enter the details of the claim below
+      </p>
+    </div>
+  );
+
   return (
-    <div className="p-12">
-      <h1 className="text-2xl font-bold mb-4">Claim Management</h1>
-      <CommonTable
-        headers={headers}
-        data={sampleClaims}
-        customRenderers={customRenderers}
-        includeActions
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
+    <div className="max-w-auto mx-auto p-6">
+      <Card header={header} className="shadow-lg border-0 overflow-hidden">
+        <CommonTable
+          headers={headers}
+          data={sampleClaims}
+          customRenderers={customRenderers}
+          includeActions
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      </Card>
     </div>
   );
 };
