@@ -1,6 +1,7 @@
 // EstimationDetailsPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Card } from "primereact/card";
 
 const EstimationDetailsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -118,171 +119,174 @@ const EstimationDetailsPage: React.FC = () => {
     }, 3000);
   };
 
+  const header = (
+    <div className="bg-gradient-to-r to-indigo-900 from-indigo-700 p-6 text-white">
+      <h2 className="text-2xl font-bold mb-2">Estimation Details</h2>
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={handleValidateEstimation}>
+        Validate Estimation
+      </button>
+    </div>
+  );
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      {/* Page Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Estimation Details</h1>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={handleValidateEstimation}
-        >
-          Validate Estimation
-        </button>
-      </div>
-
-      {/* Estimation Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Two-field row for Policy Holder and Estimated Amount */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block font-semibold mb-1">Policy Holder</label>
-            <input
-              type="text"
-              value={policyHolder}
-              onChange={(e) => setPolicyHolder(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div>
-            <label className="block font-semibold mb-1">Estimated Amount</label>
-            <input
-              type="text"
-              value={estimatedAmount}
-              onChange={(e) => setEstimatedAmount(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-        </div>
-        {/* Full-width row for Claim ID */}
-        <div>
-          <label className="block font-semibold mb-1">Claim ID</label>
-          <input
-            type="text"
-            value={claimId}
-            onChange={(e) => setClaimId(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        {/* Full-width row for Estimation Remark */}
-        <div>
-          <label className="block font-semibold mb-1">Estimation Remark</label>
-          <textarea
-            value={estimationRemark}
-            onChange={(e) => setEstimationRemark(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            rows={3}
-          />
-        </div>
-        {/* Display Hardcoded PDF (as an iframe) */}
-        <div>
-          <label className="block font-semibold mb-1">
-            Estimation Document
-          </label>
-          <div className="w-full h-[600px] border border-gray-300 rounded overflow-hidden">
-            <iframe
-              src={estimationPdfUrl}
-              style={{ width: "100%", height: "100%" }}
-              frameBorder="0"
-              title="Estimation PDF"
-            />
-          </div>
-        </div>
-      </form>
-
-      {/* Loading Modal */}
-      {isModalLoading && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded w-[90%] max-w-xl">
-            <div className="flex items-center">
-              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-4"></div>
-              <span className="text-xl">Analyzing Estimation...</span>
+      <Card header={header} className="shadow-lg border-0 overflow-hidden">
+        {/* Estimation Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Two-field row for Policy Holder and Estimated Amount */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-semibold mb-1">Policy Holder</label>
+              <input
+                type="text"
+                value={policyHolder}
+                onChange={(e) => setPolicyHolder(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">
+                Estimated Amount
+              </label>
+              <input
+                type="text"
+                value={estimatedAmount}
+                onChange={(e) => setEstimatedAmount(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
             </div>
           </div>
-        </div>
-      )}
+          {/* Full-width row for Claim ID */}
+          <div>
+            <label className="block font-semibold mb-1">Claim ID</label>
+            <input
+              type="text"
+              value={claimId}
+              onChange={(e) => setClaimId(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          {/* Full-width row for Estimation Remark */}
+          <div>
+            <label className="block font-semibold mb-1">
+              Estimation Remark
+            </label>
+            <textarea
+              value={estimationRemark}
+              onChange={(e) => setEstimationRemark(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+              rows={3}
+            />
+          </div>
+          {/* Display Hardcoded PDF (as an iframe) */}
+          <div>
+            <label className="block font-semibold mb-1">
+              Estimation Document
+            </label>
+            <div className="w-full h-[600px] border border-gray-300 rounded overflow-hidden">
+              <iframe
+                /* src={estimationPdfUrl} */
+                style={{ width: "100%", height: "100%" }}
+                frameBorder="0"
+                title="Estimation PDF"
+              />
+            </div>
+          </div>
+        </form>
 
-      {/* Validation Modal */}
-      {isModalOpen && !isModalLoading && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div
-            className="bg-white p-4 rounded w-[90%] max-w-xl"
-            style={{ maxHeight: "70vh", overflowY: "auto" }}
-          >
-            <h2 className="text-2xl font-bold mb-4">
-              System Generated Estimation
-            </h2>
-            <p className="mb-4 font-semibold">
-              Vehicle Model: Suzuki Shift 2018
-            </p>
-            <div className="overflow-auto">
-              <table className="min-w-full border border-gray-300">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="px-4 py-2 border border-gray-300 text-left">
-                      Spare Part Name
-                    </th>
-                    <th className="px-4 py-2 border border-gray-300 text-left">
-                      Estimated Price
-                    </th>
-                    <th className="px-4 py-2 border border-gray-300 text-left">
-                      Retrieved Price
-                    </th>
-                    <th className="px-4 py-2 border border-gray-300 text-left">
-                      Provider
-                    </th>
-                    <th className="px-4 py-2 border border-gray-300 text-left">
-                      Provider Contact
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {spareParts.map((part, index) => (
-                    <tr key={index} className="border border-gray-300">
-                      <td className="px-4 py-2 border border-gray-300">
-                        {part.name}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-300">
-                        {part.estimated}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-300">
-                        LKR {part.retrieved.toLocaleString()}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-300">
-                        {part.provider}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-300">
-                        {part.contact}
-                      </td>
+        {/* Loading Modal */}
+        {isModalLoading && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded w-[90%] max-w-xl">
+              <div className="flex items-center">
+                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-4"></div>
+                <span className="text-xl">Analyzing Estimation...</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Validation Modal */}
+        {isModalOpen && !isModalLoading && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div
+              className="bg-white p-4 rounded w-[90%] max-w-xl"
+              style={{ maxHeight: "70vh", overflowY: "auto" }}>
+              <h2 className="text-2xl font-bold mb-4">
+                System Generated Estimation
+              </h2>
+              <p className="mb-4 font-semibold">
+                Vehicle Model: Suzuki Shift 2018
+              </p>
+              <div className="overflow-auto">
+                <table className="min-w-full border border-gray-300">
+                  <thead className="bg-gray-200">
+                    <tr>
+                      <th className="px-4 py-2 border border-gray-300 text-left">
+                        Spare Part Name
+                      </th>
+                      <th className="px-4 py-2 border border-gray-300 text-left">
+                        Estimated Price
+                      </th>
+                      <th className="px-4 py-2 border border-gray-300 text-left">
+                        Retrieved Price
+                      </th>
+                      <th className="px-4 py-2 border border-gray-300 text-left">
+                        Provider
+                      </th>
+                      <th className="px-4 py-2 border border-gray-300 text-left">
+                        Provider Contact
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-4">
-              <p className="font-bold">Generated Estimation: LKR 202,000</p>
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                className="bg-purple-700 text-white px-4 py-2 rounded"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Close
-              </button>
+                  </thead>
+                  <tbody>
+                    {spareParts.map((part, index) => (
+                      <tr key={index} className="border border-gray-300">
+                        <td className="px-4 py-2 border border-gray-300">
+                          {part.name}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300">
+                          {part.estimated}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300">
+                          LKR {part.retrieved.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300">
+                          {part.provider}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300">
+                          {part.contact}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4">
+                <p className="font-bold">Generated Estimation: LKR 202,000</p>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  className="bg-purple-700 text-white px-4 py-2 rounded"
+                  onClick={() => setIsModalOpen(false)}>
+                  Close
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Back to Home Button */}
-      <div className="mt-8">
-        <button
-          className="bg-purple-700 text-white px-6 py-3 rounded"
-          onClick={() => navigate("/home")}
-        >
-          Back to Home
-        </button>
-      </div>
+        {/* Back to Home Button */}
+        <div className="mt-8">
+          <button
+            className="bg-purple-700 text-white px-6 py-3 rounded"
+            onClick={() => navigate("/home")}>
+            Back to Home
+          </button>
+        </div>
+      </Card>
     </div>
   );
 };
