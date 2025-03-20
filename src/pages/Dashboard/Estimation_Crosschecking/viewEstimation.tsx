@@ -131,7 +131,7 @@ const EstimationDetailsPage: React.FC = () => {
   );
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="max-w-auto mx-auto p-6">
       <Card header={header} className="shadow-lg border-0 overflow-hidden">
         {/* Estimation Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
