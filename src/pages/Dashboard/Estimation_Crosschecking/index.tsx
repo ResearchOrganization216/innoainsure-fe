@@ -70,12 +70,14 @@ const customRenderers = {
   },
 };
 
-const onEdit = () => {};
-
-const onDelete = () => {};
-
 const ClaimManagement: React.FC = () => {
   const navigate = useNavigate();
+
+  const onEdit = () => {
+    navigate("/dashboard/estimation-crosschecking/view-record");
+  };
+
+  const onDelete = () => {};
 
   const header = (
     <div className="bg-gradient-to-r to-indigo-900 from-indigo-700 p-6 text-white">
