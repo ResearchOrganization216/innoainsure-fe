@@ -5,15 +5,15 @@ import { useNavigate } from "react-router-dom";
 const EstimationDetailsPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Hardcoded sample values for form fields
-  const [policyHolder, setPolicyHolder] = useState("Nilan Perera");
+  // d sample values for form fields
+  const [policyHolder, setPolicyHolder] = useState("Nuwan Perera");
   const [estimatedAmount, setEstimatedAmount] = useState("248,000");
   const [estimationRemark, setEstimationRemark] = useState(
     "No additional damage observed."
   );
   const [claimId, setClaimId] = useState("CLM001");
 
-  // Hardcoded estimation document PDF URL
+  // d estimation document PDF URL
   const estimationPdfUrl =
     "https://storage.googleapis.com/innoa-bucket/claim_documents/Garage_Damage_Estimation_Report_2.pdf";
 
@@ -27,70 +27,70 @@ const EstimationDetailsPage: React.FC = () => {
       name: "Front Bumper",
       estimated: "LKR 35,000",
       retrieved: 31000,
-      provider: "Provider A",
+      provider: "Sanath Motors",
       contact: "0771234567",
     },
     {
       name: "Headlight",
       estimated: "LKR 50,000",
       retrieved: 48000,
-      provider: "Provider B",
+      provider: "HLC Holdings",
       contact: "0772345678",
     },
     {
       name: "Left Fender",
       estimated: "LKR 12,000",
       retrieved: 11000,
-      provider: "Provider C",
+      provider: "Sanath Motors",
       contact: "0773456789",
     },
     {
       name: "Grille",
       estimated: "LKR 20,000",
       retrieved: 19000,
-      provider: "Provider D",
+      provider: "Kumara Motors",
       contact: "0774567890",
     },
     {
       name: "Rear Bumper",
       estimated: "LKR 35,000",
       retrieved: 14000,
-      provider: "Provider A",
+      provider: "HLC Holdings",
       contact: "0771234567",
     },
     {
       name: "Windshield",
       estimated: "LKR 20,000",
       retrieved: 12000,
-      provider: "Provider B",
+      provider: "Nuwan Motors",
       contact: "0772345678",
     },
     {
       name: "Side Mirror",
       estimated: "LKR 23,500",
       retrieved: 23000,
-      provider: "Provider C",
+      provider: "Sanath Motors",
       contact: "0773456789",
     },
     {
       name: "Tire",
       estimated: "LKR 8,500",
       retrieved: 8000,
-      provider: "Provider D",
+      provider: "Nimal Motors",
       contact: "0774567890",
     },
     {
       name: "Brake Pad",
       estimated: "LKR 14,000",
       retrieved: 12000,
-      provider: "Provider A",
+      provider: "Ruwanga Motors",
       contact: "0771234567",
     },
     {
       name: "Exhaust",
       estimated: "LKR 30,000",
       retrieved: 24000,
-      provider: "Provider B",
+      provider: "Sanath Motors",
       contact: "0772345678",
     },
   ];
@@ -174,7 +174,7 @@ const EstimationDetailsPage: React.FC = () => {
             rows={3}
           />
         </div>
-        {/* Display Hardcoded PDF (as an iframe) */}
+        {/* Display d PDF (as an iframe) */}
         <div>
           <label className="block font-semibold mb-1">
             Estimation Document

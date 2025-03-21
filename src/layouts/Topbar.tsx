@@ -34,9 +34,9 @@ const Topbar: FC = () => {
       </div>
 
       <div className="mr-6 flex items-center space-x-2 text-black lg:space-x-5">
-        {image_path ? (
+        {1 === 1 ? (
           <img
-            src={image_path}
+            src="https://storage.googleapis.com/innoa-bucket/user_attachments/af0486b7-5b09-4349-8486-449574d863b6_bohemian-man-with-his-arms-crossed.jpg"
             alt="User Avatar"
             className="h-8 w-8 rounded-full object-cover lg:h-12 lg:w-12"
           />
@@ -44,8 +44,8 @@ const Topbar: FC = () => {
           <UserIcon className="size-6 lg:size-12" />
         )}
         <div className="flex flex-col">
-          <span className="text-sm lg:text-base">{Name}</span>
-          <span className="text-[11px] font-light">{Roles?.[0]}</span>
+          <span className="text-sm lg:text-base">David Hamilton</span>
+          <span className="text-[11px] font-light">Underwriter</span>
         </div>
         <i
           title="Logout"

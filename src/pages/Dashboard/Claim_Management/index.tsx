@@ -14,31 +14,10 @@ const headers = [
 const sampleClaims = [
   {
     CLAIM_CODE: "CLM001",
-    POLICY_HOLDER_NAME: "John Doe",
+    POLICY_HOLDER_NAME: "Nuwan Perera",
     CLAIM_STATUS: "Pending",
-    CLAIM_AMOUNT: "", // Empty for pending
+    CLAIM_AMOUNT: "",
     CREATED_DATE: "2025/03/15",
-  },
-  {
-    CLAIM_CODE: "CLM002",
-    POLICY_HOLDER_NAME: "Jane Smith",
-    CLAIM_STATUS: "Settled",
-    CLAIM_AMOUNT: "5000",
-    CREATED_DATE: "2025/03/16",
-  },
-  {
-    CLAIM_CODE: "CLM003",
-    POLICY_HOLDER_NAME: "Alice Johnson",
-    CLAIM_STATUS: "Rejected",
-    CLAIM_AMOUNT: "3000",
-    CREATED_DATE: "2025/03/19",
-  },
-  {
-    CLAIM_CODE: "CLM004",
-    POLICY_HOLDER_NAME: "Bob Brown",
-    CLAIM_STATUS: "Settled",
-    CLAIM_AMOUNT: "4000",
-    CREATED_DATE: "2025/03/18",
   },
 ];
 
@@ -69,12 +48,14 @@ const customRenderers = {
   },
 };
 
-const onEdit = () => {};
-
 const onDelete = () => {};
 
 const ClaimManagement: React.FC = () => {
   const navigate = useNavigate();
+
+  const onEdit = () => {
+    navigate("/dashboard/claim-management/view-record");
+  };
 
   return (
     <div className="p-12">

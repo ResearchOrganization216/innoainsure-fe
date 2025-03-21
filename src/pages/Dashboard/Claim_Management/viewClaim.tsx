@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const ClaimDetailsPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Hardcoded claim details
+  // d claim details
   const [claimCode] = useState("CLM001");
   const [claimDescription] = useState("Accident on highway");
   const [policyHolderEmail] = useState("john.doe@example.com");
@@ -16,7 +16,7 @@ const ClaimDetailsPage: React.FC = () => {
   const [witnessPresent] = useState("Yes");
   const [policeReportFiled] = useState("Yes");
   const [driverGender] = useState("Male");
-  const [vehicleCategory] = useState("Sedan");
+  const [vehicleCategory] = useState("Suzuki Shift 2018");
   const [policyType] = useState("Full");
   const [driverRating] = useState("4.5");
   const [claimStatus] = useState("Pending");
@@ -27,7 +27,7 @@ const ClaimDetailsPage: React.FC = () => {
   const [riskPercentage, setRiskPercentage] = useState<number | null>(null);
   const [riskMessage, setRiskMessage] = useState("");
 
-  // Hardcoded image URLs for claim documents
+  // d image URLs for claim documents
   const imageUrls = [
     "https://storage.googleapis.com/innoa-bucket/claim_documents/damaged-car-3.jpg",
     "https://storage.googleapis.com/innoa-bucket/claim_documents/damaged-car-4.jpg",
@@ -218,7 +218,7 @@ const ClaimDetailsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Hardcoded images */}
+      {/* d images */}
       <div className="mt-6">
         <h2 className="text-xl font-bold mb-2">Claim Documents</h2>
         <div className="flex gap-4">
