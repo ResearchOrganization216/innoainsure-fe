@@ -111,7 +111,7 @@ export function Login() {
             </div>
           )}
 
-          <div className="text-primary-link my-10 cursor-pointer mr-[100px] text-right text-sm !text-primary-blue">
+          <div className="text-primary-link my-10 cursor-pointer !mr-[186px] text-right text-sm !text-primary-blue">
             Forgot Password ?
           </div>
 

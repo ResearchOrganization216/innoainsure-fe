@@ -8,9 +8,8 @@ import { NavLink } from "react-router-dom";
 const Sidenav: FC = () => {
   const { isExpanded, toggleSidebar } = useSidebarStore();
   const [openSubMenus, setOpenSubMenus] = useState({});
-  //const { Roles } = useAuthStore((state) => state.user) || {};
 
-  const toggleSubMenu = (key) => {
+  const toggleSubMenu = (key: string) => {
     setOpenSubMenus((prev) => ({
       ...prev,
       [key]: !prev[key],
@@ -18,24 +17,22 @@ const Sidenav: FC = () => {
   };
 
   const isAdmin = true;
-
   const excludedPaths = ["/sign-in", "/sign-up", "/", "/not-authorized"];
 
   const filteredRoutes = (routes as any)
-    .filter(({ title, pages }) => {
+    .filter(({ title, pages }: any) => {
       if (title === "auth") {
-        return !pages.some((page) => excludedPaths.includes(page.path));
+        return !pages.some((page: any) => excludedPaths.includes(page.path));
       }
       return true;
     })
-    .map(({ layout, title, pages }, key) => {
+    .map(({ layout, title, pages }: any, key: number) => {
       const regexExcludedPaths = excludedPaths.map(
         (path) => new RegExp("^" + path.replace(/:\w+/g, "[^/]+") + "$")
       );
 
-      // Filter pages based on excluded paths and admin-only status
       const filteredPages = pages.filter(
-        (page) =>
+        (page: any) =>
           !regexExcludedPaths.some((regex) => regex.test(page.path)) &&
           (!page.adminOnly || isAdmin)
       );
@@ -58,25 +55,27 @@ const Sidenav: FC = () => {
         />
       )}
       <div
-        className={`fixed  left-0 z-30 transform ${
+        className={`fixed left-0 z-30 transform ${
           isExpanded ? "translate-x-0 " : "-translate-x-full lg:translate-x-0"
-        } lg:transition-width  ${
+        } lg:transition-width ${
           isExpanded ? "w-3/4 md:w-[30%] lg:w-[250px]" : "md:w-[64px]"
-        }  bg-primary-blue py-9 duration-100 `}>
-        {filteredRoutes.map(({ layout, pages }, key) => (
+        } bg-primary-blue py-9 duration-100`}
+      >
+        {filteredRoutes.map(({ layout, pages }: any, key: number) => (
           <ul
             key={key}
-            className="flex max-h-[calc(100%-85px)] min-h-screen flex-col  gap-1 overflow-y-auto ">
-            {(pages as any).map(({ icon, name, path, children }, key) => (
-              <React.Fragment key={key}>
-                <li onClick={() => children && toggleSubMenu(name)}>
-                  <NavLink
-                    to={layout === "dashboard" ? `/dashboard${path}` : path}>
-                    {({ isActive }) => (
+            className="flex max-h-[calc(100%-85px)] min-h-screen flex-col gap-1 overflow-y-auto"
+          >
+            {(pages as any).map(
+              ({ icon, name, path, children }: any, idx: number) => (
+                <React.Fragment key={idx}>
+                  <li>
+                    {children ? (
+                      // For a parent with children, render a clickable div to toggle submenu
                       <div
-                        className={`flex items-center ${
-                          isActive && "bg-primary-orangeLight"
-                        } px-4 py-5 text-sm text-white hover:bg-primary-orangeLight`}>
+                        onClick={() => toggleSubMenu(name)}
+                        className="flex items-center px-4 py-5 text-sm text-white hover:bg-primary-orangeLight cursor-pointer"
+                      >
                         <div className="mr-4">{icon}</div>
                         {isExpanded && name}
                         {children &&
@@ -86,39 +85,48 @@ const Sidenav: FC = () => {
                             <ArrowRight className="ml-auto" />
                           ))}
                       </div>
+                    ) : (
+                      // For normal (non-nested) items, use a NavLink with the defined path
+                      <NavLink
+                        to={path}
+                        className={({ isActive }) =>
+                          `flex items-center px-4 py-5 text-sm text-white hover:bg-primary-orangeLight ${
+                            isActive ? "bg-primary-orangeLight" : ""
+                          }`
+                        }
+                      >
+                        <div className="mr-4">{icon}</div>
+                        {isExpanded && name}
+                      </NavLink>
                     )}
-                  </NavLink>
-                </li>
-                {children && openSubMenus[name] && (
-                  <div className="-mt-1 bg-primary-darkBlue ">
-                    <ul className=" relative ml-6 border-l border-secondary-gray  py-2 ">
-                      {children.map((child) => (
-                        <li key={child.name}>
-                          <NavLink
-                            to={
-                              layout === "dashboard"
-                                ? `/dashboard${child.path}`
-                                : child.path
-                            }>
-                            {({ isActive }) => (
-                              <div
-                                className={`flex items-center rounded-sm ${
+                  </li>
+                  {children && openSubMenus[name] && (
+                    <div className="-mt-1 bg-primary-darkBlue">
+                      <ul className="relative ml-[28px] py-2 mr-2">
+                        {children.map((child: any) => (
+                          <li key={child.name}>
+                            <NavLink
+                              // Parent "path" already ends with a slash, so just concatenate the child path.
+                              to={`/dashboard${path}${child.path}`}
+                              className={({ isActive }) =>
+                                `flex items-center rounded-sm py-3 text-sm hover:text-white ${
                                   isActive
                                     ? "text-white"
                                     : "text-secondary-gray"
-                                }  py-3 text-sm  hover:text-white`}>
-                                <div className="mr-3">{child.icon}</div>
-                                {child.name}
-                              </div>
-                            )}
-                          </NavLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
+                                }`
+                              }
+                            >
+                              <div className="mr-3">{child.icon}</div>
+                              {child.name}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </React.Fragment>
+              )
+            )}
           </ul>
         ))}
       </div>

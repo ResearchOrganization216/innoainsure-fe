@@ -1,19 +1,25 @@
 import {
+  MdDashboard,
+  MdEditDocument,
+  MdMoney,
+  MdOpenInBrowser,
+  MdRadio,
+  MdTireRepair,
+} from "react-icons/md";
+import { Navigate, Outlet } from "react-router-dom";
+import {
   ClaimManagement,
   CustomerRiskManagement,
-  Unauthorised,
-  PremiumList,
-  PremiumAdjustment,
-  Login,
   DataExtractionInspectionReport,
   EstimationCrossChecking,
   Home,
+  Login,
+  PremiumAdjustment,
+  PremiumList,
+  Unauthorised,
   ViewClaim,
   ViewEstimation,
 } from "./pages";
-
-import { MdDashboard, MdRadio, MdMoney } from "react-icons/md";
-import { Navigate } from "react-router-dom";
 import DataExtraction from "./pages/Dashboard/Data-Extraction-ClaimReport";
 import DataExtractionDriveStatement from "./pages/Dashboard/Data-Extraction-DriverStatement";
 
@@ -21,13 +27,16 @@ const icon = {
   className: "w-6 h-6 text-inherit",
 };
 
+// This layout provides an Outlet for Document Management child routes.
+const DocumentManagementLayout = () => <Outlet />;
+
 export const routes = [
   {
     layout: "dashboard",
     pages: [
       {
         path: "/",
-        element: <Navigate to='/dashboard' replace />,
+        element: <Navigate to="/dashboard" replace />,
       },
       {
         icon: <MdDashboard {...icon} />,
@@ -36,7 +45,7 @@ export const routes = [
         element: <Home />,
       },
       {
-        icon: <MdRadio {...icon} />,
+        icon: <MdTireRepair {...icon} />,
         name: "Risk Management",
         path: "/customer-risk-management",
         element: <CustomerRiskManagement />,
@@ -47,23 +56,33 @@ export const routes = [
         path: "/premium-list",
         element: <PremiumList />,
       },
+      // Document Management nested under /dashboard
       {
-        icon: <MdRadio {...icon} />,
-        name: "Data Extraction Claim Report",
-        path: "/document-data-extraction",
-        element: <DataExtraction />,
-      },
-      {
-        icon: <MdRadio {...icon} />,
-        name: "Data Extraction Driver Statement",
-        path: "/document-data-extraction-driver-statement",
-        element: <DataExtractionDriveStatement />,
-      },
-      {
-        icon: <MdRadio {...icon} />,
-        name: "Data Extraction Inspection Report",
-        path: "/document-data-extraction-inspection-report",
-        element: <DataExtractionInspectionReport />,
+        icon: <MdEditDocument {...icon} />,
+        name: "Document Management",
+        path: "/document-management/",
+        element: <DocumentManagementLayout />,
+        children: [
+          {
+            icon: <MdOpenInBrowser {...icon} />,
+            name: "Data Extraction Claim Report",
+            // Relative path appended to the parent's path:
+            path: "document-data-extraction",
+            element: <DataExtraction />,
+          },
+          {
+            icon: <MdOpenInBrowser {...icon} />,
+            name: "Data Extraction Driver Statement",
+            path: "document-data-extraction-driver-statement",
+            element: <DataExtractionDriveStatement />,
+          },
+          {
+            icon: <MdOpenInBrowser {...icon} />,
+            name: "Data Extraction Inspection Report",
+            path: "document-data-extraction-inspection-report",
+            element: <DataExtractionInspectionReport />,
+          },
+        ],
       },
       {
         icon: <MdRadio {...icon} />,
@@ -90,11 +109,11 @@ export const routes = [
       },
       {
         path: "/auth",
-        element: <Navigate to='/auth/sign-in' replace />,
+        element: <Navigate to="/auth/sign-in" replace />,
       },
       {
         path: "/",
-        element: <Navigate to='/auth/sign-in' replace />,
+        element: <Navigate to="/auth/sign-in" replace />,
       },
     ],
   },

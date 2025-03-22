@@ -17,7 +17,7 @@ export default {
           cell: "#E5EDF6",
           red: "#F62E21",
           lightBlueShadow: "#45ABED",
-          darkBlue: "#011E2F",
+          darkBlue: "#240950",
           lightGreen: "#3BD622",
           red: "#FF0000",
           blackText: "#222E3D",
@@ -29,7 +29,7 @@ export default {
           skyBlue: "#35A6F0",
           blueBorder: "#002941",
           grayBackground: "#F3F8FB",
-          inputBorder: "#2D2C7F"
+          inputBorder: "#2D2C7F",
         },
         secondary: {
           blue: "#002941",
